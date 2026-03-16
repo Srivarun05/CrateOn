@@ -1,0 +1,79 @@
+/* --- GLOBAL STEAM-LIKE B&W THEME --- */
+.steam-dashboard {
+  min-height: 100vh;
+  background-color: #000000;
+  color: #e5e7eb;
+  font-family: system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+}
+
+/* --- TOP GLOBAL NAVIGATION --- */
+.global-header {
+  background-color: #0a0a0a;
+  border-bottom: 1px solid #1f1f1f;
+  padding: 12px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.header-left { display: flex; align-items: center; gap: 32px; }
+.brand-logo { display: flex; align-items: center; gap: 8px; font-size: 20px; font-weight: 800; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; }
+.main-nav-links { display: flex; gap: 24px; }
+.main-nav-link { color: #a3a3a3; font-size: 14px; font-weight: 600; text-transform: uppercase; text-decoration: none; cursor: pointer; transition: color 0.2s; letter-spacing: 0.5px; }
+.main-nav-link:hover, .main-nav-link.active { color: #ffffff; }
+.main-nav-link.admin-link { color: #ffffff; border-bottom: 2px solid #ffffff; }
+
+.header-right { display: flex; align-items: center; gap: 16px; }
+.action-icon { color: #a3a3a3; cursor: pointer; transition: color 0.2s; display: flex; align-items: center; justify-content: center; }
+.action-icon:hover { color: #ffffff; }
+.user-profile-btn { background-color: #1a1a1a; padding: 6px 16px; border-radius: 4px; display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #ffffff; cursor: pointer; border: 1px solid #333; transition: background 0.2s; }
+.user-profile-btn:hover { background-color: #2a2a2a; }
+
+/* --- SUB NAVIGATION (Filter/Search Bar) --- */
+.sub-header { background-color: #121212; padding: 10px 32px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1f1f1f; }
+.sub-nav-links { display: flex; gap: 20px; }
+.sub-link { color: #888; font-size: 13px; cursor: pointer; transition: color 0.2s; }
+.sub-link:hover { color: #fff; }
+.search-container { position: relative; display: flex; align-items: center; }
+.search-input { background-color: #1a1a1a; border: 1px solid #333; color: #fff; padding: 6px 12px 6px 32px; border-radius: 4px; font-size: 13px; width: 250px; transition: border-color 0.2s; }
+.search-input:focus { outline: none; border-color: #666; }
+.search-icon { position: absolute; left: 10px; color: #666; width: 14px; height: 14px; }
+
+/* --- MAIN CONTENT CONTAINER --- */
+.main-content { max-width: 1200px; margin: 0 auto; padding: 32px; }
+
+/* --- HERO BANNER --- */
+.hero-banner { position: relative; width: 100%; height: 380px; background-size: cover; background-position: center; margin-bottom: 48px; border: 1px solid #333; display: flex; align-items: center; padding: 48px; box-shadow: inset 0 0 50px rgba(0,0,0,0.8); }
+.hero-content { max-width: 500px; }
+.hero-tag { background-color: #ffffff; color: #000000; padding: 4px 8px; font-size: 11px; font-weight: 800; text-transform: uppercase; margin-bottom: 16px; display: inline-block; letter-spacing: 1px; }
+.hero-title { font-size: 48px; font-weight: 800; color: #ffffff; margin-bottom: 16px; line-height: 1.1; letter-spacing: -1px; }
+.hero-stats { display: flex; gap: 16px; color: #a3a3a3; font-size: 14px; margin-bottom: 24px; }
+.hero-btn { background-color: #ffffff; color: #000000; border: none; padding: 12px 24px; font-size: 15px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background-color 0.2s; }
+.hero-btn:hover { background-color: #cccccc; }
+
+/* --- SECTIONS & GRIDS --- */
+.section-header { font-size: 18px; color: #ffffff; margin-bottom: 20px; font-weight: 400; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 12px; }
+.section-line { flex: 1; height: 1px; background-color: #222; }
+.game-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 48px; }
+.game-grid.four-cols { grid-template-columns: repeat(4, 1fr); }
+
+/* --- GAME CARD --- */
+.game-card { background-color: #121212; border: 1px solid #222; transition: transform 0.2s, border-color 0.2s; cursor: pointer; }
+.game-card:hover { transform: translateY(-4px); border-color: #555; }
+.card-image-wrapper { position: relative; width: 100%; padding-top: 56.25%; overflow: hidden; background-color: #1a1a1a; }
+.card-image { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%); transition: filter 0.3s; }
+.game-card:hover .card-image { filter: grayscale(50%); }
+.card-content { padding: 16px; }
+.card-title { font-size: 16px; font-weight: 600; color: #ffffff; margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card-status { display: flex; justify-content: space-between; font-size: 12px; color: #888; }
+.status-badge { background-color: #222; padding: 2px 6px; border-radius: 2px; color: #ccc; }
+
+/* --- ADMIN ZONE --- */
+.admin-zone { background: repeating-linear-gradient(45deg, #111, #111 10px, #0a0a0a 10px, #0a0a0a 20px); border: 1px dashed #444; padding: 32px; margin-top: 24px; }
+.admin-title { color: #fff; font-size: 20px; margin-bottom: 12px; display: flex; align-items: center; gap: 12px; }
+.admin-btn { background-color: #222; color: #fff; border: 1px solid #444; padding: 10px 20px; font-weight: bold; cursor: pointer; }
+.admin-btn.primary { background-color: #fff; color: #000; border: none; }

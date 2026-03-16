@@ -38,7 +38,7 @@ const Register = () => {
 
   return (
     <div className="auth-container register-bg" style={{
-        backgroundImage: `linear-gradient(rgba(5, 5, 5, 0.5), rgba(5, 5, 5, 0.8)), url(${bgImage})`,
+        backgroundImage: `url(${bgImage})`,
         backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed'
     }}>
       <header className="header">
