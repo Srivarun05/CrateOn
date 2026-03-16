@@ -30,7 +30,7 @@ const Home = () => {
       <TopNav />
       <SubNav />
 
-      <main className="main-content">
+      <main className="dashboard-main">
         <HeroBanner />
 
         {/* JUMP BACK IN ROW */}
