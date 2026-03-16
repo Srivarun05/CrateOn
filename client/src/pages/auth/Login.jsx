@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Api from '../../Api'; 
+import { useAuth } from '../../context/AuthContext';
 import { Mail, Lock, ArrowRight, PieChart } from 'lucide-react';
 import libraryImage from '../../assets/Library.png'; 
 import bgImage from '../../assets/LibraryBlur.png'; 
@@ -8,6 +9,8 @@ import '../../styles/auth.css';
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -19,23 +22,22 @@ const Login = () => {
   setLoading(true);
 
   try {
-    const response = await Api.post('/auth/login', {
-      email,
-      password
-    });
+      const response = await Api.post('/auth/login', {
+        email,
+        password
+      });
+      login(response.data.data, response.data.data.token);
+      
+      console.log("Login successful!", response.data);
+      alert("Welcome back!");
+      navigate('/home'); 
 
-    localStorage.setItem('token', response.data.data.token);
-    localStorage.setItem('user', JSON.stringify(response.data.data));
-    
-    console.log("Login successful!", response.data);
-    alert("Welcome back!");
-  } catch (err) {
-    setError(err.response?.data?.message || 'Failed to login. Please try again.');
-  } finally {
-    setLoading(false);
-  }
-};
-
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to login. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="auth-container" style={{
