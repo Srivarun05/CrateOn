@@ -1,30 +1,29 @@
 import React from 'react';
-import { Plus, MoreHorizontal } from 'lucide-react';
 
-const GameCard = ({ game, isBacklog = false }) => {
+const GameCard = ({ game }) => {
   return (
     <div className="game-card">
       <div className="card-image-wrapper">
-        <img src={game.img} alt={game.title} className="card-image" />
+        {/* Looking for game.image or game.imageUrl from your DB */}
+        <img src={game.image || game.imageUrl} alt={game.name} className="card-image" />
       </div>
       <div className="card-content">
-        <h3 className="card-title">{game.title}</h3>
+        <h3 className="card-title">{game.name}</h3>
         
-        {/* Render standard status OR backlog actions based on prop */}
-        {!isBacklog ? (
-          <div className="card-status">
-            <span className="status-badge">{game.status}</span>
-            <span>{game.progress} Completed</span>
-          </div>
-        ) : (
-          <div className="card-status">
-            <span style={{ color: '#fff', display: 'flex', alignItems: 'center' }}>
-              <Plus size={14} style={{ marginRight: '4px' }}/> Log Time
-            </span>
-            <MoreHorizontal size={16} color="#666"/>
-          </div>
-        )}
+        <div className="card-status" style={{ marginBottom: '8px' }}>
+          <span className="status-badge">{game.genre}</span>
+        </div>
         
+        <p style={{ 
+          fontSize: '13px', 
+          color: '#888', 
+          display: '-webkit-box', 
+          WebkitLineClamp: 3, 
+          WebkitBoxOrient: 'vertical', 
+          overflow: 'hidden' 
+        }}>
+          {game.description}
+        </p>
       </div>
     </div>
   );
