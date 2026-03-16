@@ -30,7 +30,6 @@ const Login = () => {
       login(response.data.data, response.data.data.token);
       
       console.log("Login successful!", response.data);
-      alert("Welcome back!");
       navigate('/home'); 
 
     } catch (err) {

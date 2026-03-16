@@ -26,7 +26,6 @@ const Register = () => {
       });
 
       console.log("Registration successful!", response.data);
-      alert("Account created successfully! Please log in.");
       navigate('/login');
 
     } catch (err) {
