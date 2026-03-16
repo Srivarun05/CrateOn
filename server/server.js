@@ -11,7 +11,6 @@ import favoriteRoutes from "./routes/favoriteRoutes.js";
 import commentRoutes from "./routes/commentRoutes.js";
 import ratingRoutes from "./routes/ratingRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
-import themeRoutes from './routes/themeRoutes';
 
 dotenv.config();
 
@@ -28,7 +27,6 @@ app.use("/api/favorites", favoriteRoutes);
 app.use("/api/comments", commentRoutes);
 app.use("/api/ratings", ratingRoutes);
 app.use("/api/users", userRoutes);
-app.use('/api/theme', themeRoutes); 
 
 
 const __filename = fileURLToPath(import.meta.url);
