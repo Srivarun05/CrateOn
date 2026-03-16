@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import Api from '../../Api';
 import bgImage from '../../assets/registerBG.png';
 import { User, AtSign, Lock, Rocket, PieChart } from 'lucide-react';
 import '../../styles/auth.css';
@@ -14,12 +14,12 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
 
   const handleRegister = async (e) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
+  e.preventDefault();
+  setError('');
+  setLoading(true);
 
-    try {
-      const response = await axios.post('http://localhost:8000/api/auth/register', {
+  try {
+        const response = await Api.post('/auth/register', {
         username,
         email,
         password
@@ -27,12 +27,9 @@ const Register = () => {
 
       console.log("Registration successful!", response.data);
       alert("Account created successfully! Please log in.");
-      
-      // Automatically redirect the user to the login page after success
       navigate('/login');
 
     } catch (err) {
-       // Safely extract backend error message (e.g., "Email already taken")
       setError(err.response?.data?.message || 'Failed to register. Please try again.');
     } finally {
       setLoading(false);
