@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import Api from '../../Api'; 
 import { Mail, Lock, ArrowRight, PieChart } from 'lucide-react';
 import libraryImage from '../../assets/Library.png'; 
 import bgImage from '../../assets/LibraryBlur.png'; 
@@ -14,33 +14,28 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
+  e.preventDefault();
+  setError('');
+  setLoading(true);
 
-    try {
-      const response = await axios.post('http://localhost:8000/api/auth/login', {
-        email,
-        password
-      });
+  try {
+    const response = await Api.post('/auth/login', {
+      email,
+      password
+    });
 
-      // Save token and user data to LocalStorage
-      localStorage.setItem('token', response.data.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data.data));
-      
-      console.log("Login successful!", response.data);
-      alert("Welcome back!");
-      
-      // Navigate to the main app dashboard (You will build this next!)
-      // navigate('/home');
+    localStorage.setItem('token', response.data.data.token);
+    localStorage.setItem('user', JSON.stringify(response.data.data));
+    
+    console.log("Login successful!", response.data);
+    alert("Welcome back!");
+  } catch (err) {
+    setError(err.response?.data?.message || 'Failed to login. Please try again.');
+  } finally {
+    setLoading(false);
+  }
+};
 
-    } catch (err) {
-      // Safely extract backend error message
-      setError(err.response?.data?.message || 'Failed to login. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="auth-container" style={{
