@@ -1,24 +1,32 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
+
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
+import Home from './pages/dashboard/Home';
 
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
       <Routes>
-          {/* Automatically redirect the root URL to the login page */}
           <Route path="/" element={<Navigate to="/login" replace />} />
-          
-          {/* Auth Routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          
-          {/* You will add your Dashboard/Home route here later! */}
-          {/* <Route path="/home" element={<Home />} /> */}
-        </Routes>
+
+          <Route element={<ProtectedRoute />}>
+            <Route path="/home" element={<Home />} />
+            <Route path="/profile" element={<div>Profile Page</div>} />
+          </Route>
+
+          <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
+            <Route path="/admin" element={<div>Admin Dashboard Page</div>} />
+            <Route path="/manage-games" element={<div>Manage Global Games</div>} />
+          </Route> 
+
+        </Routes> 
       </BrowserRouter>
     </AuthProvider>  
 
