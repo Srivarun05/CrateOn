@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Api from '../../Api';
-import bgImage from '../../assets/registerBG.png';
 import { User, AtSign, Lock, Rocket, PieChart } from 'lucide-react';
+import bgImage from '../../assets/registerBG.png';
 import '../../styles/auth.css';
 
 const Register = () => {
   const navigate = useNavigate();
-  
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -15,11 +14,11 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
 
   const handleRegister = async (e) => {
-  e.preventDefault();
-  setError('');
-  setLoading(true);
+    e.preventDefault();
+    setError('');
+    setLoading(true);
 
-  try {
+    try {
         const response = await Api.post('/auth/register', {
         username,
         email,
@@ -38,8 +37,8 @@ const Register = () => {
   };
 
   return (
-    <div className="auth-container" style={{
-        backgroundImage: `url(${bgImage})`,
+    <div className="auth-container register-bg" style={{
+        backgroundImage: `linear-gradient(rgba(5, 5, 5, 0.5), rgba(5, 5, 5, 0.8)), url(${bgImage})`,
         backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed'
     }}>
       <header className="header">

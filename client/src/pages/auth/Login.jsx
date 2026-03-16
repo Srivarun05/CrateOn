@@ -10,22 +10,23 @@ import '../../styles/auth.css';
 const Login = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
-
+  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e) => {
-  e.preventDefault();
-  setError('');
-  setLoading(true);
+    e.preventDefault();
+    setError('');
+    setLoading(true);
 
-  try {
+    try {
       const response = await Api.post('/auth/login', {
         email,
         password
       });
+
       login(response.data.data, response.data.data.token);
       
       console.log("Login successful!", response.data);
@@ -112,4 +113,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Login; 
