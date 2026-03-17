@@ -16,6 +16,8 @@ const Home = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingGame, setEditingGame] = useState(null);
+  const featuredGames = games.filter(game => game.isFeatured === true || String(game.isFeatured) === 'true');
+  const bannerGamesToDisplay = featuredGames.length > 0 ? featuredGames : games.slice(0, 3);
 
   const fetchGames = async () => {
     try {
@@ -48,7 +50,7 @@ const Home = () => {
       <SubNav onOpenCreateModal={handleOpenCreate} />
 
       <main className="dashboard-main">
-        <HeroBanner games={games.slice(0, 3)} />
+        <HeroBanner games={bannerGamesToDisplay} />
 
         <div className="section-header">
           Explore Games <div className="section-line"></div>

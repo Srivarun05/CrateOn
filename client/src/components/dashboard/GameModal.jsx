@@ -14,6 +14,7 @@ const GameModal = ({ isOpen, onClose, gameToEdit, refreshGames }) => {
   const [name, setName] = useState('');
   const [genres, setGenres] = useState([]); 
   const [description, setDescription] = useState('');
+  const [isFeatured, setIsFeatured] = useState(false);
   
   const [imageFile, setImageFile] = useState(null); 
   const [imagePreview, setImagePreview] = useState(''); 
@@ -25,6 +26,7 @@ const GameModal = ({ isOpen, onClose, gameToEdit, refreshGames }) => {
     if (gameToEdit) {
       setName(gameToEdit.name || '');
       setDescription(gameToEdit.description || '');
+      setIsFeatured(gameToEdit.isFeatured === true || gameToEdit.isFeatured === 'true');
       
       let dbGenres = gameToEdit.genre || [];
       if (typeof dbGenres === 'string') dbGenres = dbGenres.split(',').map(g => g.trim());
@@ -44,6 +46,7 @@ const GameModal = ({ isOpen, onClose, gameToEdit, refreshGames }) => {
     setDescription('');
     setImageFile(null);
     setImagePreview('');
+    setIsFeatured(false);
   };
 
   if (!isOpen) return null;
@@ -85,6 +88,7 @@ const GameModal = ({ isOpen, onClose, gameToEdit, refreshGames }) => {
     formData.append('name', name);
     formData.append('description', description);
     formData.append('genre', genres.join(', '));
+    formData.append('isFeatured', isFeatured);
     
     if (imageFile) {
       formData.append('image', imageFile);
@@ -120,6 +124,21 @@ const GameModal = ({ isOpen, onClose, gameToEdit, refreshGames }) => {
           </div>
           <button className="close-btn" onClick={onClose}><X size={24} /></button>
         </div>
+
+        <div className="toggle-container">
+            <div className="toggle-text-block">
+              <span className="toggle-label">Feature in Hero Banner</span>
+              <span className="toggle-desc">Showcase this game in the large rotating banner at the top of the dashboard.</span>
+            </div>
+            <label className="toggle-switch">
+              <input 
+                type="checkbox" 
+                checked={isFeatured} 
+                onChange={(e) => setIsFeatured(e.target.checked)} 
+              />
+              <span className="toggle-slider"></span>
+            </label>
+          </div>
 
         <form className="modal-form" onSubmit={handleSubmit}>
           

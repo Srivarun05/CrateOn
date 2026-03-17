@@ -90,7 +90,7 @@ const HeroBanner = ({ games }) => {
           </div>
         );
       })}
-      
+
       {games.length > 1 && (
         <div style={{ 
           position: 'absolute', 
