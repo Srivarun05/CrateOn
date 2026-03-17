@@ -53,7 +53,7 @@ export const updateComment = async (req, res, next) => {
             throw new Error("Comment not found");
         }
 
-        if (existingComment.user.toString() !== req.user._id.toString()) {
+        if (existingComment.user.toString() !== req.user._id.toString() && req.user.role !== "admin") {
             res.status(403); 
             throw new Error("You are not authorized to edit this comment");
         }
