@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Play } from 'lucide-react';
 
+const getImageUrl = (imagePath) => {
+  if (!imagePath) return '';
+  if (imagePath.startsWith('http')) return imagePath;
+  return `http://localhost:8000/${imagePath.replace(/\\/g, "/")}`; 
+};
+
 const HeroBanner = ({ games }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -34,50 +40,56 @@ const HeroBanner = ({ games }) => {
       backgroundColor: '#0a0a0a'
     }}>
       
-      {games.map((game, index) => (
-        <div 
-          key={game._id || index} 
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            backgroundImage: `linear-gradient(to right, rgba(0,0,0,0.95) 20%, rgba(0,0,0,0.1) 100%), url(${game.image || game.imageUrl})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            opacity: index === currentIndex ? 1 : 0,
-            visibility: index === currentIndex ? 'visible' : 'hidden',
-            transition: 'opacity 0.8s ease-in-out, visibility 0.8s',
-            zIndex: index === currentIndex ? 1 : 0,
-            display: 'flex',
-            alignItems: 'center',
-            padding: '48px'
-          }}
-        >
-          <div className="hero-content" style={{ maxWidth: '600px' }}>
-            <div className="hero-tag">{game.genre || 'Featured'}</div>
-            <h1 className="hero-title">{game.name}</h1>
-            
-            <p style={{ 
-              color: '#aaa', 
-              marginBottom: '24px', 
-              fontSize: '15px',
-              lineHeight: '1.5',
-              display: '-webkit-box', 
-              WebkitLineClamp: 2, 
-              WebkitBoxOrient: 'vertical', 
-              overflow: 'hidden' 
-            }}>
-              {game.description}
-            </p>
-            
-            <button className="hero-btn">
-              <Play size={18} fill="#000" /> View Details
-            </button>
+      {games.map((game, index) => {
+        const displayGenre = Array.isArray(game.genre) 
+          ? game.genre.join(', ') 
+          : (game.genre || 'Featured');
+      
+        return (
+          <div 
+            key={game._id || index} 
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              backgroundImage: `linear-gradient(to right, rgba(0,0,0,0.95) 20%, rgba(0,0,0,0.1) 100%), url(${getImageUrl(game.image || game.imageUrl)})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              opacity: index === currentIndex ? 1 : 0,
+              visibility: index === currentIndex ? 'visible' : 'hidden',
+              transition: 'opacity 0.8s ease-in-out, visibility 0.8s',
+              zIndex: index === currentIndex ? 1 : 0,
+              display: 'flex',
+              alignItems: 'center',
+              padding: '48px'
+            }}
+          >
+            <div className="hero-content" style={{ maxWidth: '600px' }}>
+              <div className="hero-tag">{displayGenre}</div>
+              <h1 className="hero-title">{game.name}</h1>
+              
+              <p style={{ 
+                color: '#aaa', 
+                marginBottom: '24px', 
+                fontSize: '15px',
+                lineHeight: '1.5',
+                display: '-webkit-box', 
+                WebkitLineClamp: 2, 
+                WebkitBoxOrient: 'vertical', 
+                overflow: 'hidden' 
+              }}>
+                {game.description}
+              </p>
+              
+              <button className="hero-btn">
+                <Play size={18} fill="#000" /> View Details
+              </button>
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
 
       {games.length > 1 && (
         <div style={{ 
