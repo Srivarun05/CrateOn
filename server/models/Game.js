@@ -21,6 +21,10 @@ const gameSchema = mongoose.Schema({
     image: {
         type:String,
         required: [true, "Please add a cover image"]
+    },
+    isFeatured: {
+        type: Boolean,
+        default: false
     }
 }, { timestamps: true });
 

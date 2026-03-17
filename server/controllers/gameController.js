@@ -7,7 +7,7 @@ import fs from "fs";
 
 export const createGame = async (req, res) => {
     try {
-        let { name, description, genre } = req.body;
+        let { name, description, genre, isFeatured } = req.body;
 
         if (!name || !description || !genre || !req.file) {
             return res.status(400).json({ 
@@ -27,13 +27,15 @@ export const createGame = async (req, res) => {
         } else if (!Array.isArray(genre)) {
             genre = [genre];
         }
-
+        
+        const isFeaturedBool = req.body.isFeatured === 'true';
         const imagePath = req.file.path.replace(/\\/g, "/");                                                                    
 
         const game = await Game.create({
             name,
             description,
             genre,
+            isFeatured: isFeaturedBool,
             image: imagePath
         });
 
@@ -81,7 +83,7 @@ export const getGameById = async (req, res, next) => {
 
 export const updateGame = async (req, res, next) => {
     try {
-        let { name, description, genre } = req.body;
+        let { name, description, genre, isFeatured } = req.body;
 
         const game = await Game.findById(req.params.id);
         if (!game) {
@@ -109,8 +111,12 @@ export const updateGame = async (req, res, next) => {
             game.genre = genre;
         }
 
+        if (isFeatured !== undefined) {
+            game.isFeatured = isFeatured === 'true';
+        }
+
         if (req.file) {
-            if (game.image) {
+            if (game.image && fs.existsSync(game.image)) {
                 fs.unlink(game.image, (err) => {
                     if (err) console.error("Failed to delete old image:", err);
                 });
@@ -139,7 +145,7 @@ export const deleteGame = async (req, res) => {
             return res.status(404).json({ message: "Game not found" });
         }
 
-        if (game.image) {
+        if (game.image && fs.existsSync(game.image)) {
             fs.unlink(game.image, (err) => {
                 if (err) console.error("Failed to delete image file:", err);
             });
