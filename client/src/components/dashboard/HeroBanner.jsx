@@ -44,7 +44,7 @@ const HeroBanner = ({ games }) => {
         const displayGenre = Array.isArray(game.genre) 
           ? game.genre.join(', ') 
           : (game.genre || 'Featured');
-      
+
         return (
           <div 
             key={game._id || index} 
@@ -90,7 +90,7 @@ const HeroBanner = ({ games }) => {
           </div>
         );
       })}
-
+      
       {games.length > 1 && (
         <div style={{ 
           position: 'absolute', 

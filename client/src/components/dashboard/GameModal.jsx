@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { X, UploadCloud, Trash2, Sword, Target, Globe, Car, Footprints, LayoutGrid } from 'lucide-react';
+import { X, UploadCloud, Trash2 } from 'lucide-react'; 
 import Api from '../../Api';
-
 
 const getImageUrl = (imagePath) => {
   if (!imagePath) return '';
@@ -9,15 +8,7 @@ const getImageUrl = (imagePath) => {
   return `http://localhost:8000/${imagePath.replace(/\\/g, "/")}`; 
 };
 
-// Available Genres with Icons
-const AVAILABLE_GENRES = [
-  { name: 'Action RPG', icon: <Sword size={14} /> },
-  { name: 'FPS', icon: <Target size={14} /> },
-  { name: 'Open World', icon: <Globe size={14} /> },
-  { name: 'Simulation', icon: <Car size={14} /> },
-  { name: 'Platformer', icon: <Footprints size={14} /> },
-  { name: 'Other', icon: <LayoutGrid size={14} /> }
-];
+const AVAILABLE_GENRES_LIST = ["Action", "RPG", "FPS", "Strategy", "Adventure", "Simulation", "SoulsLike", "OpenWorld", "Dark-Fantasy", "Indie"];
 
 const GameModal = ({ isOpen, onClose, gameToEdit, refreshGames }) => {
   const [name, setName] = useState('');
@@ -38,7 +29,7 @@ const GameModal = ({ isOpen, onClose, gameToEdit, refreshGames }) => {
       let dbGenres = gameToEdit.genre || [];
       if (typeof dbGenres === 'string') dbGenres = dbGenres.split(',').map(g => g.trim());
       setGenres(dbGenres);
-      
+
       const rawImage = gameToEdit.image || gameToEdit.imageUrl;
       setImagePreview(getImageUrl(rawImage));
       setImageFile(null); 
@@ -57,8 +48,7 @@ const GameModal = ({ isOpen, onClose, gameToEdit, refreshGames }) => {
 
   if (!isOpen) return null;
 
- 
-  const toggleGenre = (genreName) => {
+  const handleGenreToggle = (genreName) => {
     if (genres.includes(genreName)) {
       setGenres(genres.filter(g => g !== genreName)); 
     } else {
@@ -66,7 +56,9 @@ const GameModal = ({ isOpen, onClose, gameToEdit, refreshGames }) => {
     }
   };
 
-  const handleFileClick = () => fileInputRef.current.click();
+  const handleFileClick = () => {
+    fileInputRef.current.click();
+  };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -99,7 +91,7 @@ const GameModal = ({ isOpen, onClose, gameToEdit, refreshGames }) => {
     }
 
     try {
-      if (gameToEdit) {
+      if (gameToEdit) {        
         await Api.put(`/game/${gameToEdit._id}`, formData, {
           headers: { 'Content-Type': 'multipart/form-data' }
         });
@@ -108,8 +100,8 @@ const GameModal = ({ isOpen, onClose, gameToEdit, refreshGames }) => {
           headers: { 'Content-Type': 'multipart/form-data' }
         });
       }
-      refreshGames();
-      onClose();
+      refreshGames(); 
+      onClose();      
     } catch (error) {
       console.error("Failed to save game", error);
       alert(error.response?.data?.message || "Failed to save. Check console.");
@@ -137,15 +129,20 @@ const GameModal = ({ isOpen, onClose, gameToEdit, refreshGames }) => {
           </div>
 
           <div className="form-group">
-            <label>Genres</label>
-            <div className="genre-grid">
-              {AVAILABLE_GENRES.map(g => (
+            <label>Genres (Select all that apply)</label>
+            <div className="genre-checkbox-grid">
+              {AVAILABLE_GENRES_LIST.map(genreName => (
                 <div 
-                  key={g.name}
-                  className={`genre-pill ${genres.includes(g.name) ? 'active' : ''}`}
-                  onClick={() => toggleGenre(g.name)}
+                  key={genreName} 
+                  className={`genre-checkbox-item ${genres.includes(genreName) ? 'active' : ''}`}
                 >
-                  {g.icon} {g.name}
+                  <input 
+                    type="checkbox" 
+                    id={`genre-${genreName}`} 
+                    checked={genres.includes(genreName)}
+                    onChange={() => handleGenreToggle(genreName)}
+                  />
+                  <label htmlFor={`genre-${genreName}`}>{genreName}</label>
                 </div>
               ))}
             </div>
