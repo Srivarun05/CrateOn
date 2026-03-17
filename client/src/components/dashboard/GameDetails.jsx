@@ -157,6 +157,7 @@ const GameDetails = ({ isOpen, onClose, game }) => {
                             <button onClick={() => startEditing(commentObj)} title="Edit Comment"><Edit2 size={14} /></button>
                           )}
                           
+                          {/* Only the admin can delete */}
                           {isAdmin && (
                             <button onClick={() => handleDeleteComment(commentObj._id)} title="Delete Comment" className="delete"><Trash2 size={14} /></button>
                           )}
