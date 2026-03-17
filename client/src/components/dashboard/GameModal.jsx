@@ -19,6 +19,7 @@ const GameModal = ({ isOpen, onClose, gameToEdit, refreshGames }) => {
   const [imageFile, setImageFile] = useState(null); 
   const [imagePreview, setImagePreview] = useState(''); 
   const [loading, setLoading] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false); 
   
   const fileInputRef = useRef(null);
 
@@ -59,9 +60,7 @@ const GameModal = ({ isOpen, onClose, gameToEdit, refreshGames }) => {
     }
   };
 
-  const handleFileClick = () => {
-    fileInputRef.current.click();
-  };
+  const handleFileClick = () => fileInputRef.current.click();
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -75,6 +74,24 @@ const GameModal = ({ isOpen, onClose, gameToEdit, refreshGames }) => {
     setImageFile(null);
     setImagePreview(''); 
     if (fileInputRef.current) fileInputRef.current.value = ''; 
+  };
+
+  const handleDelete = async () => {
+    const confirmDelete = window.confirm(`Are you sure you want to delete "${gameToEdit.name}"? This action cannot be undone.`);
+    if (!confirmDelete) return;
+
+    setIsDeleting(true);
+    try {
+      await Api.delete(`/game/${gameToEdit._id}`);
+      
+      refreshGames(); 
+      onClose();      
+    } catch (error) {
+      console.error("Failed to delete game", error);
+      alert(error.response?.data?.message || "Failed to delete game. Check console.");
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -122,7 +139,7 @@ const GameModal = ({ isOpen, onClose, gameToEdit, refreshGames }) => {
             <h2>{gameToEdit ? 'Edit Game' : 'Add New Game'}</h2>
             <p>Enter the details for the {gameToEdit ? 'existing' : 'new'} platform title</p>
           </div>
-          <button className="close-btn" onClick={onClose}><X size={24} /></button>
+          <button className="close-btn" onClick={onClose} disabled={loading || isDeleting}><X size={24} /></button>
         </div>
 
         <div className="toggle-container">
@@ -135,6 +152,7 @@ const GameModal = ({ isOpen, onClose, gameToEdit, refreshGames }) => {
                 type="checkbox" 
                 checked={isFeatured} 
                 onChange={(e) => setIsFeatured(e.target.checked)} 
+                disabled={loading || isDeleting}
               />
               <span className="toggle-slider"></span>
             </label>
@@ -144,7 +162,7 @@ const GameModal = ({ isOpen, onClose, gameToEdit, refreshGames }) => {
           
           <div className="form-group">
             <label>Game Title</label>
-            <input type="text" placeholder="e.g. Apex Legends" value={name} onChange={e => setName(e.target.value)} required />
+            <input type="text" placeholder="e.g. Apex Legends" value={name} onChange={e => setName(e.target.value)} required disabled={loading || isDeleting} />
           </div>
 
           <div className="form-group">
@@ -160,6 +178,7 @@ const GameModal = ({ isOpen, onClose, gameToEdit, refreshGames }) => {
                     id={`genre-${genreName}`} 
                     checked={genres.includes(genreName)}
                     onChange={() => handleGenreToggle(genreName)}
+                    disabled={loading || isDeleting}
                   />
                   <label htmlFor={`genre-${genreName}`}>{genreName}</label>
                 </div>
@@ -169,12 +188,12 @@ const GameModal = ({ isOpen, onClose, gameToEdit, refreshGames }) => {
 
           <div className="form-group">
             <label>Description</label>
-            <textarea rows="4" placeholder="Brief overview of the game mechanics and story..." value={description} onChange={e => setDescription(e.target.value)} required></textarea>
+            <textarea rows="4" placeholder="Brief overview of the game mechanics and story..." value={description} onChange={e => setDescription(e.target.value)} required disabled={loading || isDeleting}></textarea>
           </div>
           
           <div className="form-group">
             <label>Game Cover Image</label>
-            <input type="file" ref={fileInputRef} className="hidden-file-input" accept="image/png, image/jpeg, image/gif, image/webp" onChange={handleFileChange} />
+            <input type="file" ref={fileInputRef} className="hidden-file-input" accept="image/png, image/jpeg, image/gif, image/webp" onChange={handleFileChange} disabled={loading || isDeleting} />
             {!imagePreview && (
               <div className="upload-zone" onClick={handleFileClick}>
                 <UploadCloud size={32} className="upload-icon" />
@@ -197,19 +216,34 @@ const GameModal = ({ isOpen, onClose, gameToEdit, refreshGames }) => {
                     {imageFile && <div className="progress-bar"></div>}
                   </div>
                 </div>
-                <button type="button" className="remove-file-btn" onClick={removeFile} title="Remove Image">
+                <button type="button" className="remove-file-btn" onClick={removeFile} title="Remove Image" disabled={loading || isDeleting}>
                   <Trash2 size={18} />
                 </button>
               </div>
             )}
           </div>
           
-          <div className="modal-actions">
-            <button type="button" className="btn-cancel" onClick={onClose}>Cancel</button>
-            <button type="submit" className="btn-primary" disabled={loading}>
-              {loading ? 'Processing...' : (gameToEdit ? 'Update Game' : 'Create Game')}
-            </button>
+          <div className="modal-actions" style={{ display: 'flex', justifyContent: gameToEdit ? 'space-between' : 'flex-end', marginTop: '32px' }}>
+            
+            {gameToEdit && (
+              <button 
+                type="button" 
+                className="btn-danger" 
+                onClick={handleDelete} 
+                disabled={isDeleting || loading}
+              >
+                {isDeleting ? 'Deleting...' : 'Delete Game'}
+              </button>
+            )}
+
+            <div style={{ display: 'flex', gap: '12px' }}>
+              <button type="button" className="btn-cancel" onClick={onClose} disabled={loading || isDeleting}>Cancel</button>
+              <button type="submit" className="btn-primary" disabled={loading || isDeleting}>
+                {loading ? 'Processing...' : (gameToEdit ? 'Update Game' : 'Create Game')}
+              </button>
+            </div>
           </div>
+
         </form>
       </div>
     </div>
