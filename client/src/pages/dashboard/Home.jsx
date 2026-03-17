@@ -5,7 +5,7 @@ import TopNav from '../../components/layout/TopNav';
 import SubNav from '../../components/layout/SubNav';
 import HeroBanner from '../../components/dashboard/HeroBanner';
 import GameCard from '../../components/dashboard/GameCard';
-import AdminZone from '../../components/dashboard/AdminZone';
+import GameModal from '../../components/dashboard/GameModal';
 import '../../styles/dashboard.css';
 
 const Home = () => {
@@ -14,28 +14,40 @@ const Home = () => {
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchGames = async () => {
-      try {
-        const response = await Api.get('/games'); 
-        setGames(response.data.data || response.data || []);
-      } catch (error) {
-        console.error("Error fetching games from database:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingGame, setEditingGame] = useState(null);
 
+  const fetchGames = async () => {
+    try {
+      const response = await Api.get('/games'); 
+      setGames(response.data.data || response.data || []);
+    } catch (error) {
+      console.error("Error fetching games:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchGames();
   }, []);
+
+  const handleOpenCreate = () => {
+    setEditingGame(null); 
+    setIsModalOpen(true);
+  };
+
+  const handleOpenEdit = (game) => {
+    setEditingGame(game); 
+    setIsModalOpen(true);
+  };
 
   return (
     <div className="steam-dashboard">
       <TopNav />
-      <SubNav />
+      <SubNav onOpenCreateModal={handleOpenCreate} />
 
       <main className="dashboard-main">
-        
         <HeroBanner games={games.slice(0, 3)} />
 
         <div className="section-header">
@@ -48,17 +60,26 @@ const Home = () => {
           <div className="game-grid">
             {games.length > 0 ? (
               games.map(game => (
-                <GameCard key={game._id || game.id} game={game} />
+                <GameCard 
+                  key={game._id || game.id} 
+                  game={game} 
+                  onEdit={handleOpenEdit} 
+                />
               ))
             ) : (
-              <p style={{ color: '#888' }}>No games found in the database.</p>
+              <p style={{ color: '#888' }}>No games found. Click "Create Game" to add one!</p>
             )}
           </div>
         )}
-
-        {user?.role === 'admin' && <AdminZone />}
-
       </main>
+
+      <GameModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        gameToEdit={editingGame}
+        refreshGames={fetchGames} 
+      />
+
     </div>
   );
 };

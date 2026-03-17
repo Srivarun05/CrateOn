@@ -1,12 +1,27 @@
 import React from 'react';
+import { Edit2 } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 
-const GameCard = ({ game }) => {
+const GameCard = ({ game, onEdit }) => {
+  const { user } = useAuth();
+
   return (
-    <div className="game-card">
+    <div className="game-card" style={{ position: 'relative' }}>
+      
+      {user?.role === 'admin' && (
+        <button 
+          className="edit-btn" 
+          onClick={() => onEdit(game)} 
+          title="Edit Game"
+        >
+          <Edit2 size={16} />
+        </button>
+      )}
+
       <div className="card-image-wrapper">
-        {/* Looking for game.image or game.imageUrl from your DB */}
         <img src={game.image || game.imageUrl} alt={game.name} className="card-image" />
       </div>
+      
       <div className="card-content">
         <h3 className="card-title">{game.name}</h3>
         
