@@ -6,6 +6,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import Home from './pages/dashboard/Home';
+import GameDetails from './components/dashboard/GameDetails';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
 
           <Route element={<ProtectedRoute />}>
             <Route path="/home" element={<Home />} />
+            <Route path="/game/:id" element={<GameDetails />} />
             <Route path="/profile" element={<div>Profile Page</div>} />
           </Route>
 

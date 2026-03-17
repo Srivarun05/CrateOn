@@ -8,16 +8,17 @@ const getImageUrl = (imagePath) => {
   return `http://localhost:8000/${imagePath.replace(/\\/g, "/")}`; 
 };
 
-const GameCard = ({ game, onEdit }) => {
+const GameCard = ({ game, onEdit, onViewDetails }) => {
   const { user } = useAuth();
   const displayGenre = Array.isArray(game.genre) 
     ? game.genre.join(' | ') 
     : (game.genre || 'Explore');
 
   return (
-    <div className="game-card" style={{ position: 'relative' }}>
+    <div className="game-card" onClick={() => onViewDetails(game)} style={{ position: 'relative', cursor: 'pointer' }}>
       {user?.role === 'admin' && (
-        <button className="edit-btn" onClick={() => onEdit(game)} title="Edit Game">
+        <button className="edit-btn" onClick={(e) => { e.stopPropagation(); onEdit(game); }}
+        title="Edit Game">
           <Edit2 size={16} />
         </button>
       )}
