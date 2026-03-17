@@ -18,7 +18,6 @@ const Home = () => {
     const fetchGames = async () => {
       try {
         const response = await Api.get('/games'); 
-        
         setGames(response.data.data || response.data || []);
       } catch (error) {
         console.error("Error fetching games from database:", error);
@@ -36,7 +35,8 @@ const Home = () => {
       <SubNav />
 
       <main className="dashboard-main">
-        <HeroBanner />
+        
+        <HeroBanner games={games.slice(0, 3)} />
 
         <div className="section-header">
           Explore Games <div className="section-line"></div>
