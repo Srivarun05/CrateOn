@@ -77,7 +77,8 @@ const Home = () => {
                 <GameCard 
                   key={game._id || game.id} 
                   game={game} 
-                  onEdit={handleOpenEdit} 
+                  onEdit={handleOpenEdit}
+                  onViewDetails={handleViewDetails} 
                 />
               ))
             ) : (
@@ -99,7 +100,7 @@ const Home = () => {
         onClose={() => setIsDetailsModalOpen(false)} 
         game={viewingGame} 
       />
-      
+
     </div>
   );
 };

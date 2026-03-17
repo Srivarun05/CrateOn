@@ -15,10 +15,11 @@ const GameCard = ({ game, onEdit, onViewDetails }) => {
     : (game.genre || 'Explore');
 
   return (
-    <div className="game-card" onClick={() => onViewDetails(game)} style={{ position: 'relative', cursor: 'pointer' }}>
+    <div className="game-card" onClick={() => onViewDetails(game)} 
+    style={{ position: 'relative', cursor: 'pointer' }}>
       {user?.role === 'admin' && (
-        <button className="edit-btn" onClick={(e) => { e.stopPropagation(); onEdit(game); }}
-        title="Edit Game">
+        <button className="edit-btn" title="Edit Game"
+        onClick={(e) => { e.stopPropagation(); onEdit(game); }} >
           <Edit2 size={16} />
         </button>
       )}
