@@ -19,7 +19,7 @@ const GameCard = ({ game, onEdit }) => {
       )}
 
       <div className="card-image-wrapper">
-        <img src={game.image || game.imageUrl} alt={game.name} className="card-image" />
+        <img src={game.image?.startsWith('http') ? game.image : `http://localhost:8000/${game.image?.replace(/\\/g, "/")}`} alt={game.name} className="card-image" />
       </div>
       
       <div className="card-content">

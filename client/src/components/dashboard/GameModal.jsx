@@ -1,10 +1,27 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { X, UploadCloud, Trash2 } from 'lucide-react';
+import { X, UploadCloud, Trash2, Sword, Target, Globe, Car, Footprints, LayoutGrid } from 'lucide-react';
 import Api from '../../Api';
+
+
+const getImageUrl = (imagePath) => {
+  if (!imagePath) return '';
+  if (imagePath.startsWith('http')) return imagePath;
+  return `http://localhost:8000/${imagePath.replace(/\\/g, "/")}`; 
+};
+
+// Available Genres with Icons
+const AVAILABLE_GENRES = [
+  { name: 'Action RPG', icon: <Sword size={14} /> },
+  { name: 'FPS', icon: <Target size={14} /> },
+  { name: 'Open World', icon: <Globe size={14} /> },
+  { name: 'Simulation', icon: <Car size={14} /> },
+  { name: 'Platformer', icon: <Footprints size={14} /> },
+  { name: 'Other', icon: <LayoutGrid size={14} /> }
+];
 
 const GameModal = ({ isOpen, onClose, gameToEdit, refreshGames }) => {
   const [name, setName] = useState('');
-  const [genre, setGenre] = useState('');
+  const [genres, setGenres] = useState([]); 
   const [description, setDescription] = useState('');
   
   const [imageFile, setImageFile] = useState(null); 
@@ -16,9 +33,14 @@ const GameModal = ({ isOpen, onClose, gameToEdit, refreshGames }) => {
   useEffect(() => {
     if (gameToEdit) {
       setName(gameToEdit.name || '');
-      setGenre(gameToEdit.genre || '');
       setDescription(gameToEdit.description || '');
-      setImagePreview(gameToEdit.image || gameToEdit.imageUrl || '');
+      
+      let dbGenres = gameToEdit.genre || [];
+      if (typeof dbGenres === 'string') dbGenres = dbGenres.split(',').map(g => g.trim());
+      setGenres(dbGenres);
+      
+      const rawImage = gameToEdit.image || gameToEdit.imageUrl;
+      setImagePreview(getImageUrl(rawImage));
       setImageFile(null); 
     } else {
       resetForm();
@@ -27,7 +49,7 @@ const GameModal = ({ isOpen, onClose, gameToEdit, refreshGames }) => {
 
   const resetForm = () => {
     setName('');
-    setGenre('');
+    setGenres([]);
     setDescription('');
     setImageFile(null);
     setImagePreview('');
@@ -35,9 +57,16 @@ const GameModal = ({ isOpen, onClose, gameToEdit, refreshGames }) => {
 
   if (!isOpen) return null;
 
-  const handleFileClick = () => {
-    fileInputRef.current.click();
+ 
+  const toggleGenre = (genreName) => {
+    if (genres.includes(genreName)) {
+      setGenres(genres.filter(g => g !== genreName)); 
+    } else {
+      setGenres([...genres, genreName]); 
+    }
   };
+
+  const handleFileClick = () => fileInputRef.current.click();
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -49,18 +78,21 @@ const GameModal = ({ isOpen, onClose, gameToEdit, refreshGames }) => {
 
   const removeFile = () => {
     setImageFile(null);
-    setImagePreview(gameToEdit ? (gameToEdit.image || gameToEdit.imageUrl) : '');
+    setImagePreview(''); 
     if (fileInputRef.current) fileInputRef.current.value = ''; 
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (genres.length === 0) return alert("Please select at least one genre.");
+    if (!imagePreview && !imageFile && !gameToEdit) return alert("Please upload an image.");
+    
     setLoading(true);
 
     const formData = new FormData();
     formData.append('name', name);
-    formData.append('genre', genre);
     formData.append('description', description);
+    formData.append('genre', genres.join(', '));
     
     if (imageFile) {
       formData.append('image', imageFile);
@@ -99,23 +131,23 @@ const GameModal = ({ isOpen, onClose, gameToEdit, refreshGames }) => {
 
         <form className="modal-form" onSubmit={handleSubmit}>
           
-          <div className="form-row">
-            <div className="form-group">
-              <label>Game Title</label>
-              <input type="text" placeholder="e.g. Apex Legends" value={name} onChange={e => setName(e.target.value)} required />
-            </div>
-            <div className="form-group">
-              <label>Genre</label>
-              <select value={genre} onChange={e => setGenre(e.target.value)} required>
-                <option value="" disabled>Select Genre</option>
-                <option value="Action RPG">Action RPG</option>
-                <option value="FPS">First-Person Shooter</option>
-                <option value="Metroidvania">Metroidvania</option>
-                <option value="Open World">Open World</option>
-                <option value="Simulation">Simulation</option>
-                <option value="Platformer">Platformer</option>
-                <option value="Other">Other</option>
-              </select>
+          <div className="form-group">
+            <label>Game Title</label>
+            <input type="text" placeholder="e.g. Apex Legends" value={name} onChange={e => setName(e.target.value)} required />
+          </div>
+
+          <div className="form-group">
+            <label>Genres</label>
+            <div className="genre-grid">
+              {AVAILABLE_GENRES.map(g => (
+                <div 
+                  key={g.name}
+                  className={`genre-pill ${genres.includes(g.name) ? 'active' : ''}`}
+                  onClick={() => toggleGenre(g.name)}
+                >
+                  {g.icon} {g.name}
+                </div>
+              ))}
             </div>
           </div>
 
@@ -126,7 +158,7 @@ const GameModal = ({ isOpen, onClose, gameToEdit, refreshGames }) => {
           
           <div className="form-group">
             <label>Game Cover Image</label>
-            <input type="file" ref={fileInputRef} className="hidden-file-input" accept="image/png, image/jpeg, image/gif" onChange={handleFileChange} />
+            <input type="file" ref={fileInputRef} className="hidden-file-input" accept="image/png, image/jpeg, image/gif, image/webp" onChange={handleFileChange} />
             {!imagePreview && (
               <div className="upload-zone" onClick={handleFileClick}>
                 <UploadCloud size={32} className="upload-icon" />
@@ -149,7 +181,7 @@ const GameModal = ({ isOpen, onClose, gameToEdit, refreshGames }) => {
                     {imageFile && <div className="progress-bar"></div>}
                   </div>
                 </div>
-                <button type="button" className="remove-file-btn" onClick={removeFile}>
+                <button type="button" className="remove-file-btn" onClick={removeFile} title="Remove Image">
                   <Trash2 size={18} />
                 </button>
               </div>
