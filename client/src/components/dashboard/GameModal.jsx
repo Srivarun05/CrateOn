@@ -8,7 +8,7 @@ const getImageUrl = (imagePath) => {
   return `http://localhost:8000/${imagePath.replace(/\\/g, "/")}`; 
 };
 
-const AVAILABLE_GENRES_LIST = ["Action", "RPG", "FPS", "Strategy", "Adventure", "Simulation", "SoulsLike", "OpenWorld", "Dark-Fantasy", "Indie"];
+// const AVAILABLE_GENRES_LIST = ["Action", "RPG", "FPS", "Strategy", "Adventure", "Simulation", "SoulsLike", "OpenWorld", "Dark-Fantasy", "Indie"];
 
 const GameModal = ({ isOpen, onClose, gameToEdit, refreshGames }) => {
   const [name, setName] = useState('');
@@ -20,8 +20,22 @@ const GameModal = ({ isOpen, onClose, gameToEdit, refreshGames }) => {
   const [imagePreview, setImagePreview] = useState(''); 
   const [loading, setLoading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false); 
+
+  const [availableGenres, setAvailableGenres] = useState([]);
   
   const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    const fetchGenres = async () => {
+      try {
+        const response = await Api.get(`/game/genres?t=${new Date().getTime()}`); 
+        setAvailableGenres(response.data.data || []);
+      } catch (error) {
+        console.error("Failed to fetch genres", error);
+      }
+    };
+    fetchGenres();
+  }, []);
 
   useEffect(() => {
     if (gameToEdit) {
@@ -168,7 +182,7 @@ const GameModal = ({ isOpen, onClose, gameToEdit, refreshGames }) => {
           <div className="form-group">
             <label>Genres (Select all that apply)</label>
             <div className="genre-checkbox-grid">
-              {AVAILABLE_GENRES_LIST.map(genreName => (
+              {availableGenres.map(genreName => (
                 <div 
                   key={genreName} 
                   className={`genre-checkbox-item ${genres.includes(genreName) ? 'active' : ''}`}

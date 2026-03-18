@@ -88,18 +88,22 @@ const Home = () => {
         )}
       </main>
 
-      <GameModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
-        gameToEdit={editingGame}
-        refreshGames={fetchGames} 
-      />
+      {isModalOpen && (
+        <GameModal 
+          isOpen={isModalOpen} 
+          onClose={() => setIsModalOpen(false)} 
+          gameToEdit={editingGame}
+          refreshGames={fetchGames} 
+        />
+      )}
 
-      <GameDetails 
-        isOpen={isDetailsModalOpen} 
-        onClose={() => setIsDetailsModalOpen(false)} 
-        game={viewingGame} 
-      />
+      {isDetailsModalOpen && (
+        <GameDetails 
+          isOpen={isDetailsModalOpen} 
+          onClose={() => setIsDetailsModalOpen(false)} 
+          game={viewingGame} 
+        />
+      )}
 
     </div>
   );
