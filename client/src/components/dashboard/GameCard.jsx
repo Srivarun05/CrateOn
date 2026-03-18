@@ -1,5 +1,5 @@
 import React from 'react';
-import { Edit2 } from 'lucide-react';
+import { Edit2, Heart } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 const getImageUrl = (imagePath) => {
@@ -8,7 +8,7 @@ const getImageUrl = (imagePath) => {
   return `http://localhost:8000/${imagePath.replace(/\\/g, "/")}`; 
 };
 
-const GameCard = ({ game, onEdit, onViewDetails }) => {
+const GameCard = ({ game, onEdit, onViewDetails, isFavorited, onToggleFavorite }) => {
   const { user } = useAuth();
   const displayGenre = Array.isArray(game.genre) 
     ? game.genre.join(' | ') 
@@ -17,6 +17,18 @@ const GameCard = ({ game, onEdit, onViewDetails }) => {
   return (
     <div className="game-card" onClick={() => onViewDetails(game)} 
     style={{ position: 'relative', cursor: 'pointer' }}>
+
+      <button 
+        className={`favorite-btn ${isFavorited ? 'favorited' : ''}`}
+        title={isFavorited ? "Remove from Wishlist" : "Add to Wishlist"}
+        onClick={(e) => { 
+          e.stopPropagation(); 
+          onToggleFavorite(game._id); 
+        }} 
+      >
+        <Heart size={16} fill={isFavorited ? '#ef4444' : 'none'} color={isFavorited ? '#ef4444' : '#fff'} />
+      </button>
+      
       {user?.role === 'admin' && (
         <button className="edit-btn" title="Edit Game"
         onClick={(e) => { e.stopPropagation(); onEdit(game); }} >

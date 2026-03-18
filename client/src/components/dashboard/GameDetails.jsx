@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Trash2, Send, Edit2, Check } from 'lucide-react';
+import { X, Trash2, Send, Edit2, Check, Heart } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Api from '../../Api';
 import '../../styles/GameDetails.css'; 
@@ -10,7 +10,7 @@ const getImageUrl = (imagePath) => {
   return `http://localhost:8000/${imagePath.replace(/\\/g, "/")}`; 
 };
 
-const GameDetails = ({ isOpen, onClose, game }) => {
+const GameDetails = ({ isOpen, onClose, game, isFavorited, onToggleFavorite }) => {
   const { user } = useAuth();
   const isAdmin = user?.role === 'admin';
 
@@ -42,6 +42,11 @@ const GameDetails = ({ isOpen, onClose, game }) => {
 
   const handlePostComment = async (e) => {
     e.preventDefault();
+
+    if(!user) {
+      alert("Please log in to join the discussion.");
+      return;
+    }
     if (!newComment.trim()) return;
     setIsSubmitting(true);
     try {
@@ -101,6 +106,15 @@ const GameDetails = ({ isOpen, onClose, game }) => {
           <p className="details-genre">{displayGenre.toUpperCase()}</p>
           <p className="details-desc">{game.description}</p>
 
+          <button 
+            className="btn-wishlist" 
+            onClick={() => onToggleFavorite(game._id)}
+            style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#1a1a1a', border: '1px solid #333', color: '#fff', padding: '10px 20px', borderRadius: '6px', fontWeight: '600', cursor: 'pointer', marginBottom: '32px', width: 'fit-content' }}
+          >
+            <Heart size={18} fill={isFavorited ? '#ef4444' : 'none'} color={isFavorited ? '#ef4444' : '#fff'} />
+            {isFavorited ? 'Remove from Wishlist' : 'Add to Wishlist'}
+          </button>
+
           <div className="comments-container">
             <h3 className="comments-header">Community Discussions ({comments.length})</h3>
             
@@ -157,7 +171,6 @@ const GameDetails = ({ isOpen, onClose, game }) => {
                             <button onClick={() => startEditing(commentObj)} title="Edit Comment"><Edit2 size={14} /></button>
                           )}
                           
-                          {/* Only the admin can delete */}
                           {isAdmin && (
                             <button onClick={() => handleDeleteComment(commentObj._id)} title="Delete Comment" className="delete"><Trash2 size={14} /></button>
                           )}

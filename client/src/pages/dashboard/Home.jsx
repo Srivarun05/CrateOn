@@ -17,6 +17,8 @@ const Home = () => {
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const [favoriteIds, setFavoriteIds] = useState([]);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingGame, setEditingGame] = useState(null);
 
@@ -37,9 +39,43 @@ const Home = () => {
     }
   };
 
+  const fetchFavorites = async () => {
+    if (!user) {
+      setFavoriteIds([]); 
+      return; 
+    }
+    try {
+      const response = await Api.get('/favorites'); 
+      const ids = response.data.data.map(fav => typeof fav.game === 'object' ? fav.game._id : fav.game);
+      setFavoriteIds(ids);
+    } catch (error) {
+      console.error("Error fetching favorites:", error);
+    }
+  };
+
   useEffect(() => {
     fetchGames();
+    fetchFavorites();
   }, []);
+
+  const handleToggleFavorite = async (gameId) => {
+    if (!user) {
+      alert("Please log in to add games to your wishlist!");
+      return; 
+    }
+
+    try {
+      await Api.post(`/favorites/${gameId}`);
+      
+      if (favoriteIds.includes(gameId)) {
+        setFavoriteIds(favoriteIds.filter(id => id !== gameId)); // Remove from UI
+      } else {
+        setFavoriteIds([...favoriteIds, gameId]); // Add to UI
+      }
+    } catch (error) {
+      console.error("Failed to toggle favorite", error);
+    }
+  };
 
   const handleOpenCreate = () => {
     setEditingGame(null); 
@@ -101,7 +137,9 @@ const Home = () => {
         <GameDetails 
           isOpen={isDetailsModalOpen} 
           onClose={() => setIsDetailsModalOpen(false)} 
-          game={viewingGame} 
+          game={viewingGame}
+          isFavorited= {favoriteIds.includes(viewingGame?._id)} 
+          onToggleFavorite={handleToggleFavorite}
         />
       )}
 
