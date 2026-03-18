@@ -15,7 +15,17 @@ const gameSchema = mongoose.Schema({
     genre: {
         type: [String], 
         required: [true, "At least one genre is required"],
-        enum: ["Action", "RPG", "FPS", "Strategy", "Adventure", "Simulation", "SoulsLike", "OpenWorld", "Dark-Fantasy", "Indie"],
+        enum: [
+                "2D Platformer", "3D Platformer", "Action", "Action-Adventure", "Adventure",
+                "Casual", "Co-op", "Combat", "Combat Racing", "Dark Fantasy", "eSports",
+                "Exploration", "Fantasy", "First-Person Shooter", "FPS", "Free to Play",
+                "Racing", "Hero Shooter", "Horror", "Indie", "JRPG", "Magic",
+                "Mechs", "Multiplayer", "Online Co-Op", "Open World", "Battle Royale",
+                "Post-apocalyptic", "Puzzle", "PvP", "Racing", "Retro", "Roguelike",
+                "RPG", "Sci-fi", "Simulation", "Singleplayer", "Souls-like", "Space",
+                "Sports", "Story Rich", "Strategy", "Survival", "Stealth",
+                "Third-Person Shooter", "Turn-Based", "Zombies"
+            ],
         default: []
     },
     image: {
