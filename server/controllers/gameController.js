@@ -83,7 +83,10 @@ export const getGameById = async (req, res, next) => {
 
 export const getGenres = async (req, res, next) => {
     try {
-        const genres = Game.schema.path('genre').caster.enumValues;
+        const genres = [
+            "Action", "RPG", "FPS", "Strategy", "Adventure", 
+            "Simulation", "SoulsLike", "OpenWorld", "Dark-Fantasy", "Indie"
+        ];
         res.status(200).json({ success: true, data: genres });
     } catch (error) {
         next(error);
