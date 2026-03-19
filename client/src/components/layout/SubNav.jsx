@@ -1,18 +1,39 @@
 import React from 'react';
-import { Search, Plus, Users } from 'lucide-react';
+import { Search, Plus, Users, Heart } from 'lucide-react'; 
 import { useAuth } from '../../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const SubNav = ({ onOpenCreateModal }) => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const isAdmin = user?.role === 'admin';
 
   return (
-    <div className={`sub-header ${isAdmin ? 'admin-mode' : 'user-mode'}`}>
-      
+    <div className={`sub-header ${isAdmin ? 'admin-mode' : 'user-mode'}`} 
+      style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '20px' }}>
+      <div className="user-nav-links" style={{ display: 'flex', gap: '16px' }}>
+        <button 
+          onClick={() => navigate('/')} 
+          style={{ background: location.pathname === '/' ? '#333' : 'transparent', color: '#fff', border: 'none', 
+            padding: '8px 16px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
+        >
+          Store
+        </button>
+
+        {user && (
+          <button 
+            onClick={() => navigate('/wishlist')} 
+            style={{ display: 'flex', alignItems: 'center', gap: '8px', background: location.pathname === '/wishlist' ? '#333' : 'transparent', 
+              color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
+          >
+            <Heart size={16} fill={location.pathname === '/wishlist' ? '#fff' : 'none'} /> My Wishlist
+          </button>
+        )}
+      </div>
+
       {isAdmin && (
-        <div className="admin-actions">
+        <div className="admin-actions" style={{ display: 'flex', gap: '12px' }}>
           <button className="admin-action-btn" onClick={onOpenCreateModal}>
             <Plus size={16} /> Create Game
           </button>
@@ -22,7 +43,7 @@ const SubNav = ({ onOpenCreateModal }) => {
         </div>
       )}
 
-      <div className="search-container">
+      <div className="search-container" style={{ marginLeft: 'auto' }}>
         <Search className="search-icon" style={{ left: !isAdmin ? '16px' : '10px' }} />
         <input 
           type="text" 
@@ -30,6 +51,7 @@ const SubNav = ({ onOpenCreateModal }) => {
           placeholder="Search your library..." 
         />
       </div>
+      
     </div>
   );
 };
