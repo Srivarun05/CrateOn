@@ -48,7 +48,25 @@ export const createGame = async (req, res) => {
 
 export const getGames = async (req, res) => {
     try {
-        const games = await Game.find();
+        const games = await Game.find().lean();
+
+        for (let game of games) {
+            const ratings = await Rating.find({ game: game._id });
+            
+            if (ratings.length > 0) {
+                const sum = ratings.reduce((acc, curr) => acc + curr.rating, 0);
+                game.averageRating = sum / ratings.length;
+            } else {
+                game.averageRating = 0; 
+            }
+        }
+
+        games.sort((a, b) => {
+            if (b.averageRating !== a.averageRating) {
+                return b.averageRating - a.averageRating;
+            }
+            return new Date(b.createdAt) - new Date(a.createdAt);
+        });
         
         res.status(200).json({ 
             success: true, 
