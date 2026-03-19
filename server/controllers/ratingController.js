@@ -37,7 +37,6 @@ export const addOrUpdateRating = async (req, res, next) => {
     }
 };
 
-
 export const getGameRatings = async (req, res, next) => {
     try {
         const gameId = req.params.gameId;
@@ -50,12 +49,38 @@ export const getGameRatings = async (req, res, next) => {
             average = (sum / ratings.length).toFixed(1); 
         }
 
+        let userRating = 0;
+        if (req.user) {
+            const existingRating = ratings.find(r => r.user.toString() === req.user._id.toString());
+            if (existingRating) {
+                userRating = existingRating.rating;
+            }
+        }
+
         res.status(200).json({
             success: true,
             count: ratings.length,
-            averageRating: Number(average),
+            average: Number(average), 
+            userRating: userRating,  
             data: ratings
         });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const removeRating = async (req, res, next) => {
+    try {
+        const gameId = req.params.gameId;
+        const userId = req.user._id;
+        
+        const deletedRating = await Rating.findOneAndDelete({ user: userId, game: gameId });
+
+        if (!deletedRating) {
+            return res.status(404).json({ success: false, message: "Rating not found" });
+        }
+
+        res.status(200).json({ success: true, message: "Rating removed successfully" });
     } catch (error) {
         next(error);
     }
