@@ -242,11 +242,10 @@
     cursor: pointer; 
 }
 
-/* --- FAVORITE / WISHLIST BUTTONS --- */
 .favorite-btn {
   position: absolute;
   top: 12px;
-  left: 12px; /* Placed on the top-left, opposite to the Admin Edit button */
+  left: 12px;
   background: rgba(0, 0, 0, 0.7);
   border: 1px solid #444;
   color: #fff;
@@ -259,26 +258,45 @@
   align-items: center;
   justify-content: center;
   backdrop-filter: blur(4px);
-  transition: all 0.2s;
+  transition: all 0.2s ease-in-out;
 }
 
-.favorite-btn:hover { background: #111; border-color: #ef4444; color: #ef4444; }
-.favorite-btn.favorited { border-color: #ef4444; }
+.favorite-btn:hover { 
+    background: #111; 
+    border-color: #ef4444; 
+    color: #ef4444; 
+}
+
+.favorite-btn.favorited { 
+  background: #fff; 
+  border-color: #fff; 
+  color: #000; 
+}
 
 .btn-wishlist {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: #1a1a1a;
-  border: 1px solid #333;
+  background: transparent;
+  border: 1px solid #555;
   color: #fff;
   padding: 10px 20px;
   border-radius: 6px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s ease-in-out;
   margin-bottom: 32px;
   width: fit-content;
 }
 
-.btn-wishlist:hover { background: #2a2a2a; border-color: #ef4444; }
+.btn-wishlist:hover { background: #222; border-color: #fff; }
+
+.btn-wishlist.favorited {
+  background: #fff;
+  color: #000;
+  border-color: #fff;
+}
+.btn-wishlist.favorited:hover {
+  background: #e5e5e5;
+  border-color: #e5e5e5;
+}

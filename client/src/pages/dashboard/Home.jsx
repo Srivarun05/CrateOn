@@ -114,7 +114,9 @@ const Home = () => {
                   key={game._id || game.id} 
                   game={game} 
                   onEdit={handleOpenEdit}
-                  onViewDetails={handleViewDetails} 
+                  onViewDetails={handleViewDetails}
+                  isFavorited={favoriteIds.includes(game._id)}
+                  onToggleFavorite={handleToggleFavorite} 
                 />
               ))
             ) : (

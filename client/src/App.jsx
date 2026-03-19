@@ -7,6 +7,7 @@ import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import Home from './pages/dashboard/Home';
 import GameDetails from './components/dashboard/GameDetails';
+import Wishlist from './pages/dashboard/Wishlist';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/wishlist" element={<Wishlist />} />
 
           <Route element={<ProtectedRoute />}>
             <Route path="/home" element={<Home />} />

@@ -111,7 +111,11 @@ const GameDetails = ({ isOpen, onClose, game, isFavorited, onToggleFavorite }) =
             onClick={() => onToggleFavorite(game._id)}
             style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#1a1a1a', border: '1px solid #333', color: '#fff', padding: '10px 20px', borderRadius: '6px', fontWeight: '600', cursor: 'pointer', marginBottom: '32px', width: 'fit-content' }}
           >
-            <Heart size={18} fill={isFavorited ? '#ef4444' : 'none'} color={isFavorited ? '#ef4444' : '#fff'} />
+            <Heart 
+              size={18} 
+              fill={isFavorited ? '#000' : 'none'} 
+              color={isFavorited ? '#000' : '#fff'} 
+            />
             {isFavorited ? 'Remove from Wishlist' : 'Add to Wishlist'}
           </button>
 

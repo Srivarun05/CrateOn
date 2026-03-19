@@ -22,11 +22,15 @@ const GameCard = ({ game, onEdit, onViewDetails, isFavorited, onToggleFavorite }
         className={`favorite-btn ${isFavorited ? 'favorited' : ''}`}
         title={isFavorited ? "Remove from Wishlist" : "Add to Wishlist"}
         onClick={(e) => { 
-          e.stopPropagation(); 
+          e.stopPropagation();  
           onToggleFavorite(game._id); 
         }} 
       >
-        <Heart size={16} fill={isFavorited ? '#ef4444' : 'none'} color={isFavorited ? '#ef4444' : '#fff'} />
+        <Heart 
+          size={16} 
+          fill={isFavorited ? '#000' : 'none'} 
+          color={isFavorited ? '#000' : '#fff'} 
+        />
       </button>
       
       {user?.role === 'admin' && (
