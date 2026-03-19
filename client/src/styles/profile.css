@@ -173,7 +173,7 @@
   transform: translateY(-50%);
   color: #666;
   pointer-events: none; 
-  transition: color 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 
@@ -208,6 +208,16 @@
 .profile-input-wrapper input {
   width: 100%;
   padding-right: 48px !important; 
+  background-color: #2a2a2a;
+  border: 1px solid #444;
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1); 
+}
+
+.profile-input-wrapper input:focus {
+  background-color: #333;
+  border-color: #fff;
+  transform: translateY(-2px); /* Lifts the whole box up slightly */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 0 2px rgba(255, 255, 255, 0.1); /* Deep shadow + outer glow */
 }
 
 .profile-input-icon {
@@ -221,5 +231,12 @@
 }
 
 .profile-input-wrapper input:focus + .profile-input-icon {
-  color: #fff;
+  color: #fff; 
+  transform: translateY(-50%) scale(1.15) rotate(8deg); 
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.5)); 
+}
+
+.profile-input-wrapper:hover .profile-input-icon {
+  color: #aaa;
+  transform: translateY(-50%) scale(1.1); 
 }
