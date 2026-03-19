@@ -68,9 +68,9 @@ const Home = () => {
       await Api.post(`/favorites/${gameId}`);
       
       if (favoriteIds.includes(gameId)) {
-        setFavoriteIds(favoriteIds.filter(id => id !== gameId)); // Remove from UI
+        setFavoriteIds(favoriteIds.filter(id => id !== gameId)); 
       } else {
-        setFavoriteIds([...favoriteIds, gameId]); // Add to UI
+        setFavoriteIds([...favoriteIds, gameId]); 
       }
     } catch (error) {
       console.error("Failed to toggle favorite", error);
@@ -140,8 +140,6 @@ const Home = () => {
           isOpen={isDetailsModalOpen} 
           onClose={() => setIsDetailsModalOpen(false)} 
           game={viewingGame}
-          isFavorited= {favoriteIds.includes(viewingGame?._id)} 
-          onToggleFavorite={handleToggleFavorite}
         />
       )}
 

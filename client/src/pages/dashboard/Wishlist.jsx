@@ -93,12 +93,7 @@ const Wishlist = () => {
         <GameDetails 
           isOpen={isDetailsModalOpen} 
           onClose={() => setIsDetailsModalOpen(false)} 
-          game={viewingGame} 
-          isFavorited={true}
-          onToggleFavorite={(id) => {
-            handleToggleFavorite(id);
-            setIsDetailsModalOpen(false); // Close modal if they remove it
-          }}
+          game={viewingGame}
         />
       )}
     </div>

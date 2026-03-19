@@ -8,8 +8,6 @@ const getImageUrl = (imagePath) => {
   return `http://localhost:8000/${imagePath.replace(/\\/g, "/")}`; 
 };
 
-// const AVAILABLE_GENRES_LIST = ["Action", "RPG", "FPS", "Strategy", "Adventure", "Simulation", "SoulsLike", "OpenWorld", "Dark-Fantasy", "Indie"];
-
 const GameModal = ({ isOpen, onClose, gameToEdit, refreshGames }) => {
   const [name, setName] = useState('');
   const [genres, setGenres] = useState([]); 
@@ -176,7 +174,8 @@ const GameModal = ({ isOpen, onClose, gameToEdit, refreshGames }) => {
           
           <div className="form-group">
             <label>Game Title</label>
-            <input type="text" placeholder="e.g. Apex Legends" value={name} onChange={e => setName(e.target.value)} required disabled={loading || isDeleting} />
+            <input type="text" placeholder="e.g. Apex Legends" value={name} 
+            onChange={e => setName(e.target.value)} required disabled={loading || isDeleting} />
           </div>
 
           <div className="form-group">
@@ -202,12 +201,14 @@ const GameModal = ({ isOpen, onClose, gameToEdit, refreshGames }) => {
 
           <div className="form-group">
             <label>Description</label>
-            <textarea rows="4" placeholder="Brief overview of the game mechanics and story..." value={description} onChange={e => setDescription(e.target.value)} required disabled={loading || isDeleting}></textarea>
+            <textarea rows="4" placeholder="Brief overview of the game mechanics and story..." value={description} 
+            onChange={e => setDescription(e.target.value)} required disabled={loading || isDeleting}></textarea>
           </div>
           
           <div className="form-group">
             <label>Game Cover Image</label>
-            <input type="file" ref={fileInputRef} className="hidden-file-input" accept="image/png, image/jpeg, image/gif, image/webp" onChange={handleFileChange} disabled={loading || isDeleting} />
+            <input type="file" ref={fileInputRef} className="hidden-file-input" accept="image/png, image/jpeg, image/gif, image/webp" 
+            onChange={handleFileChange} disabled={loading || isDeleting} />
             {!imagePreview && (
               <div className="upload-zone" onClick={handleFileClick}>
                 <UploadCloud size={32} className="upload-icon" />

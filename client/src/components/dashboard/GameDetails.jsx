@@ -10,7 +10,7 @@ const getImageUrl = (imagePath) => {
   return `http://localhost:8000/${imagePath.replace(/\\/g, "/")}`; 
 };
 
-const GameDetails = ({ isOpen, onClose, game, isFavorited, onToggleFavorite }) => {
+const GameDetails = ({ isOpen, onClose, game }) => {
   const { user } = useAuth();
   const isAdmin = user?.role === 'admin';
 
