@@ -1,11 +1,12 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Gamepad2, Bell, User as UserIcon, LogOut } from 'lucide-react';
+import { PieChart, User as UserIcon, LogOut } from 'lucide-react';
 
 const TopNav = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation(); 
 
   const handleLogout = () => {
     logout();
@@ -15,17 +16,25 @@ const TopNav = () => {
   return (
     <header className="global-header">
       <div className="header-left">
-        <div className="brand-logo">
-          <Gamepad2 size={24} color="#ffffff" />
+        <div className="brand-logo" onClick={() => navigate('/home')} style={{ cursor: 'pointer' }}>
+          <PieChart size={24} color="#ffffff" />
           CrateOn
         </div>
         <nav className="main-nav-links">
-          <a className="main-nav-link active">Dashboard</a>
-          <a className="main-nav-link">Wishlist</a>
-          <a className="main-nav-link">Community</a>
+          <a 
+            className={`main-nav-link ${location.pathname === '/' ? 'active' : ''}`} 
+            onClick={() => navigate('/home')}
+            style={{ cursor: 'pointer' }}
+          >
+            Dashboard
+          </a>
           
           {user?.role === 'admin' && (
-            <a className="main-nav-link admin-link" onClick={() => navigate('/admin')}>
+            <a 
+              className={`main-nav-link admin-link ${location.pathname === '/admin' ? 'active' : ''}`} 
+              onClick={() => navigate('/admin')}
+              style={{ cursor: 'pointer' }}
+            >
               Admin Panel
             </a>
           )}
@@ -33,7 +42,7 @@ const TopNav = () => {
       </div>
 
       <div className="header-right">
-        <div className="action-icon"><Bell size={18} /></div>
+       
         <div className="user-profile-btn">
           <UserIcon size={16} />
           {user?.username ? user.username.toUpperCase() : 'GUEST'}

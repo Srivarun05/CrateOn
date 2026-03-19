@@ -12,15 +12,8 @@ const SubNav = ({ onOpenCreateModal }) => {
   return (
     <div className={`sub-header ${isAdmin ? 'admin-mode' : 'user-mode'}`} 
       style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '20px' }}>
-      <div className="user-nav-links" style={{ display: 'flex', gap: '16px' }}>
-        <button 
-          onClick={() => navigate('/')} 
-          style={{ background: location.pathname === '/' ? '#333' : 'transparent', color: '#fff', border: 'none', 
-            padding: '8px 16px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
-        >
-          Store
-        </button>
-
+      
+      <div className="user-nav-links" style={{ display: 'flex', gap: '16px' }}>        
         {user && (
           <button 
             onClick={() => navigate('/wishlist')} 
