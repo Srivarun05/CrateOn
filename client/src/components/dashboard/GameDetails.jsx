@@ -3,6 +3,7 @@ import { X, Trash2, Send, Edit2, Check, Heart } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Api from '../../Api';
 import '../../styles/GameDetails.css'; 
+import GameRating from '../../pages/dashboard/GameRating';
 
 const getImageUrl = (imagePath) => {
   if (!imagePath) return '';
@@ -106,6 +107,8 @@ const GameDetails = ({ isOpen, onClose, game }) => {
           <p className="details-genre">{displayGenre.toUpperCase()}</p>
           <p className="details-desc">{game.description}</p>
 
+          <GameRating gameId={game._id} />
+
           <div className="comments-container">
             <h3 className="comments-header">Community Discussions ({comments.length})</h3>
             
@@ -133,7 +136,8 @@ const GameDetails = ({ isOpen, onClose, game }) => {
                     <div key={commentObj._id} className="comment-item">
                       <div style={{ flexGrow: 1 }}>
                         <div className="comment-user">
-                          <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: '#333', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px' }}>
+                          <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: '#333', 
+                            display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px' }}>
                             {(commentObj.user?.username || 'P')[0].toUpperCase()}
                           </div>
                           {commentObj.user?.username || 'Player'}
