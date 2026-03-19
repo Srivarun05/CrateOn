@@ -59,3 +59,22 @@
   font-size: 12px;
   margin-top: 2px;
 }
+
+.clear-rating-btn {
+  background: transparent;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  margin-left: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.clear-rating-btn:hover {
+  background: rgba(239, 68, 68, 0.1); 
+  color: #ef4444; 
+}

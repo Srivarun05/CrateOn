@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Star } from 'lucide-react';
+import { Star, X } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Api from '../../Api';
 import '../../styles/rating.css';
@@ -24,9 +24,8 @@ const GameRating = ({ gameId }) => {
       
       setAverage(response.data.average || 0);
       setCount(response.data.count || 0);
-      if (response.data.userRating) {
-        setRating(response.data.userRating);
-      }
+      setRating(response.data.userRating || 0);
+      
     } catch (error) {
       console.error("Failed to fetch ratings", error);
     }
@@ -50,9 +49,20 @@ const GameRating = ({ gameId }) => {
     }
   };
 
+  const handleRemoveRating = async () => {
+    try {
+      await Api.delete(`/ratings/${gameId}`);
+      setRating(0); 
+      setHover(0);
+      fetchRatings(); 
+    } catch (error) {
+      console.error("Failed to remove rating", error);
+    }
+  };
+
   return (
     <div className="rating-container">
-      <div className="stars-wrapper">
+      <div className="stars-wrapper" style={{ display: 'flex', alignItems: 'center' }}>
         {[1, 2, 3, 4, 5].map((starValue) => {
           const isFilled = starValue <= (hover || rating);
 
@@ -74,11 +84,21 @@ const GameRating = ({ gameId }) => {
             </button>
           );
         })}
+
+        {rating > 0 && (
+          <button 
+            onClick={handleRemoveRating} 
+            className="clear-rating-btn"
+            title="Remove your rating"
+          >
+            <X size={16} />
+          </button>
+        )}
       </div>
 
       <div className="rating-stats">
         <span className="rating-average">
-          {average > 0 ? average.toFixed(1) : 'No ratings'} 
+          {average > 0 ? Number(average).toFixed(1) : 'No ratings'} 
           <Star size={14} fill="#888" color="#888" />
         </span>
         <span className="rating-count">
