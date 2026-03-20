@@ -98,7 +98,6 @@
   border: 1px solid #333;
 }
 
-/* Delete Button */
 .delete-user-btn {
   background: transparent;
   border: none;
@@ -120,4 +119,48 @@
 .delete-user-btn:disabled {
   opacity: 0.3;
   cursor: not-allowed;
+}
+
+
+@keyframes smoothPop {
+  0% { 
+    opacity: 0; 
+    transform: scale(0.9) translateY(15px); 
+  }
+  100% { 
+    opacity: 1; 
+    transform: scale(1) translateY(0); 
+  }
+}
+
+.popup-modal-content {
+  background: #111; 
+  border: 1px solid #333;
+  border-radius: 16px;
+  padding: 40px 32px;
+  width: 90%;
+  max-width: 420px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  animation: smoothPop 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.modal-icon-wrapper {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+}
+
+.modal-icon-wrapper.warning {
+  background: rgba(239, 68, 68, 0.05);
+  border-color: rgba(239, 68, 68, 0.2);
+  box-shadow: 0 8px 16px rgba(239, 68, 68, 0.1);
 }
