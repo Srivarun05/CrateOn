@@ -3,9 +3,12 @@ import { Star, X } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Api from '../../Api';
 import '../../styles/rating.css';
+import GuestModal from '../../components/common/GuestModal';
 
 const GameRating = ({ gameId }) => {
   const { user } = useAuth();
+
+  const [showGuestModal, setShowGuestModal] = useState(false);
   
   const [rating, setRating] = useState(0); 
   const [hover, setHover] = useState(0); 
@@ -33,7 +36,7 @@ const GameRating = ({ gameId }) => {
 
   const handleRatingSubmit = async (selectedRating) => {
     if (!user) {
-      alert("Please log in to rate this game!");
+      setShowGuestModal(true);
       return;
     }
 
@@ -105,6 +108,11 @@ const GameRating = ({ gameId }) => {
           {count} {count === 1 ? 'Review' : 'Reviews'}
         </span>
       </div>
+      <GuestModal 
+        isOpen={showGuestModal} 
+        onClose={() => setShowGuestModal(false)} 
+        actionText="rate this game" 
+      />
     </div>
   );
 };

@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import Api from '../../Api';
 import '../../styles/GameDetails.css'; 
 import GameRating from '../../pages/dashboard/GameRating';
+import GuestModal from '../common/GuestModal';
 
 const getImageUrl = (imagePath) => {
   if (!imagePath) return '';
@@ -14,6 +15,8 @@ const getImageUrl = (imagePath) => {
 const GameDetails = ({ isOpen, onClose, game }) => {
   const { user } = useAuth();
   const isAdmin = user?.role === 'admin';
+
+  const [showGuestModal, setShowGuestModal] = useState(false);
 
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
@@ -45,7 +48,7 @@ const GameDetails = ({ isOpen, onClose, game }) => {
     e.preventDefault();
 
     if(!user) {
-      alert("Please log in to join the discussion.");
+      setShowGuestModal(true);
       return;
     }
     if (!newComment.trim()) return;
@@ -180,6 +183,11 @@ const GameDetails = ({ isOpen, onClose, game }) => {
             </div>
           </div>
         </div>
+        <GuestModal 
+          isOpen={showGuestModal} 
+          onClose={() => setShowGuestModal(false)} 
+          actionText="join the discussion" 
+        />
 
       </div>
     </div>

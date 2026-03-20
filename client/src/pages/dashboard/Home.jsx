@@ -8,6 +8,7 @@ import HeroBanner from '../../components/dashboard/HeroBanner';
 import GameCard from '../../components/dashboard/GameCard';
 import GameModal from '../../components/dashboard/GameModal';
 import GameDetails from '../../components/dashboard/GameDetails';
+import GuestModal from '../../components/common/GuestModal';
 import '../../styles/dashboard.css';
 
 const Home = () => {
@@ -18,6 +19,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
 
   const [favoriteIds, setFavoriteIds] = useState([]);
+  const [showGuestModal, setShowGuestModal] = useState(false);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingGame, setEditingGame] = useState(null);
@@ -60,7 +62,7 @@ const Home = () => {
 
   const handleToggleFavorite = async (gameId) => {
     if (!user) {
-      alert("Please log in to add games to your wishlist!");
+      setShowGuestModal(true);
       return; 
     }
 
@@ -142,6 +144,12 @@ const Home = () => {
           game={viewingGame}
         />
       )}
+
+      <GuestModal 
+        isOpen={showGuestModal} 
+        onClose={() => setShowGuestModal(false)} 
+        actionText="add games to your wishlist" 
+      />
 
     </div>
   );

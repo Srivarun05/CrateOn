@@ -4,6 +4,7 @@ import Api from '../../Api';
 import TopNav from '../../components/layout/TopNav';
 import { useAuth } from '../../context/AuthContext';
 import '../../styles/admin.css';
+import ConfirmModal from '../../components/common/ConfirmModal'; 
 
 const getImageUrl = (imagePath) => {
   if (!imagePath) return '';
@@ -15,6 +16,8 @@ const ManageUsers = () => {
   const { user: currentUser } = useAuth();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  
+  const [userToDelete, setUserToDelete] = useState(null);
 
   useEffect(() => {
     fetchUsers();
@@ -31,22 +34,24 @@ const ManageUsers = () => {
     }
   };
 
-  const handleDeleteUser = async (userId, username) => {
+  const handleDeleteClick = (userId, username) => {
     if (userId === currentUser._id) {
       return alert("You cannot delete your own admin account!");
     }
+    setUserToDelete({ id: userId, username });
+  };
 
-    if (!window.confirm(`Are you sure you want to permanently delete user "${username}"?`)) {
-      return;
-    }
-
+  const confirmDelete = async () => {
+    if (!userToDelete) return;
+    
     try {
-      await Api.delete(`/users/${userId}`);
-      // Remove the deleted user from the UI immediately
-      setUsers(users.filter(u => u._id !== userId));
+      await Api.delete(`/users/${userToDelete.id}`);
+      setUsers(users.filter(u => u._id !== userToDelete.id));
     } catch (error) {
       console.error("Failed to delete user", error);
       alert(error.response?.data?.message || "Failed to delete user.");
+    } finally {
+      setUserToDelete(null); 
     }
   };
 
@@ -101,7 +106,7 @@ const ManageUsers = () => {
                     <td style={{ textAlign: 'right' }}>
                       <button 
                         className="delete-user-btn"
-                        onClick={() => handleDeleteUser(u._id, u.username)}
+                        onClick={() => handleDeleteClick(u._id, u.username)}
                         disabled={u._id === currentUser._id}
                         title={u._id === currentUser._id ? "Cannot delete yourself" : "Delete User"}
                       >
@@ -115,6 +120,15 @@ const ManageUsers = () => {
           </div>
         )}
       </main>
+
+      <ConfirmModal 
+        isOpen={!!userToDelete} 
+        onClose={() => setUserToDelete(null)}
+        onConfirm={confirmDelete}
+        title="Delete User?"
+        message={`Are you sure you want to permanently delete "${userToDelete?.username}"? This action cannot be undone.`}
+      />
+      
     </div>
   );
 };
