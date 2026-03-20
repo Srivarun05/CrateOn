@@ -107,7 +107,7 @@ export const getGenres = async (req, res, next) => {
                 "Exploration", "Fantasy", "First-Person Shooter", "FPS", "Free to Play",
                 "Racing", "Hero Shooter", "Horror", "Indie", "JRPG", "Magic",
                 "Mechs", "Multiplayer", "Online Co-Op", "Open World", "Battle Royale",
-                "Post-apocalyptic", "Puzzle", "PvP", "Racing", "Retro", "Roguelike",
+                "Post-apocalyptic", "Puzzle", "PvP", "Retro", "Roguelike",
                 "RPG", "Sci-fi", "Simulation", "Singleplayer", "Souls-like", "Space",
                 "Sports", "Story Rich", "Strategy", "Survival", "Stealth",
                 "Third-Person Shooter", "Turn-Based", "Zombies"
