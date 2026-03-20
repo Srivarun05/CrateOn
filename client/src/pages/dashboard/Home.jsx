@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import Api from '../../Api'; 
@@ -26,6 +26,38 @@ const Home = () => {
 
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [viewingGame, setViewingGame] = useState(null);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const gridTopRef = useRef(null);
+
+  let indexOfFirstGame = 0;
+  let indexOfLastGame = 6;
+  let totalPages = 1;
+
+  if (games.length > 0) {
+    if (currentPage === 1) {
+      indexOfFirstGame = 0;
+      indexOfLastGame = 6;
+    } else {
+      indexOfFirstGame = 6 + (currentPage - 2) * 9;
+      indexOfLastGame = indexOfFirstGame + 9;
+    }
+    
+    if (games.length <= 6) {
+      totalPages = 1;
+    } else {
+      totalPages = 1 + Math.ceil((games.length - 6) / 9);
+    }
+  }
+
+  const currentGamesToDisplay = games.slice(indexOfFirstGame, indexOfLastGame);
+
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    setTimeout(() => {
+      gridTopRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  };
 
   const featuredGames = games.filter(game => game.isFeatured === true || String(game.isFeatured) === 'true');
   const bannerGamesToDisplay = featuredGames.length > 0 ? featuredGames : games.slice(0, 3);
@@ -58,7 +90,7 @@ const Home = () => {
   useEffect(() => {
     fetchGames();
     fetchFavorites();
-  }, []);
+  }, [user]);
 
   const handleToggleFavorite = async (gameId) => {
     if (!user) {
@@ -100,34 +132,70 @@ const Home = () => {
       <SubNav onOpenCreateModal={handleOpenCreate} />
 
       <main className="dashboard-main">
-        <HeroBanner games={bannerGamesToDisplay} onViewDetails={handleViewDetails} />
+        
+        {currentPage === 1 && (
+          <HeroBanner games={bannerGamesToDisplay} onViewDetails={handleViewDetails} />
+        )}
 
-        <div className="section-header">
+        <div className="section-header" ref={gridTopRef}>
           Explore Games <div className="section-line"></div>
         </div>
         
         {loading ? (
           <p style={{ color: '#888' }}>Loading games from database...</p>
         ) : (
-          <div className="game-grid">
-            {games.length > 0 ? (
-              games.map(game => (
-                <GameCard 
-                  key={game._id || game.id} 
-                  game={game} 
-                  onEdit={handleOpenEdit}
-                  onViewDetails={handleViewDetails}
-                  isFavorited={favoriteIds.includes(game._id)}
-                  onToggleFavorite={handleToggleFavorite} 
-                />
-              ))
-            ) : (
-              <p style={{ color: '#888' }}>No games found. Click "Create Game" to add one!</p>
+          <>
+            <div className="game-grid">
+              {currentGamesToDisplay.length > 0 ? (
+                currentGamesToDisplay.map(game => (
+                  <GameCard 
+                    key={game._id || game.id} 
+                    game={game} 
+                    onEdit={handleOpenEdit}
+                    onViewDetails={handleViewDetails}
+                    isFavorited={favoriteIds.includes(game._id)}
+                    onToggleFavorite={handleToggleFavorite} 
+                  />
+                ))
+              ) : (
+                <p style={{ color: '#888' }}>No games found. Click "Create Game" to add one!</p>
+              )}
+            </div>
+
+            {totalPages > 1 && (
+              <div className="pagination-container">
+                <button 
+                  onClick={() => paginate(currentPage - 1)} 
+                  disabled={currentPage === 1}
+                  className="page-btn"
+                >
+                  Prev
+                </button>
+
+                {[...Array(totalPages)].map((_, index) => (
+                  <button 
+                    key={index + 1} 
+                    onClick={() => paginate(index + 1)}
+                    className={`page-btn ${currentPage === index + 1 ? 'active' : ''}`}
+                  >
+                    {index + 1}
+                  </button>
+                ))}
+
+                <button 
+                  onClick={() => paginate(currentPage + 1)} 
+                  disabled={currentPage === totalPages}
+                  className="page-btn"
+                >
+                  Next
+                </button>
+              </div>
             )}
-          </div>
+          </>
         )}
       </main>
 
+      {/* --- MODALS --- */}
       {isModalOpen && (
         <GameModal 
           isOpen={isModalOpen} 

@@ -924,3 +924,44 @@
 .modal-content.large.closing {
   animation: modalFadeOut 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 40px;
+  margin-bottom: 20px;
+}
+
+.page-btn {
+  background: #111;
+  border: 1px solid #333;
+  color: #aaa;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.page-btn:hover:not(:disabled) {
+  background: #222;
+  color: #fff;
+  border-color: #555;
+  transform: translateY(-2px);
+}
+
+.page-btn.active {
+  background: #fff;
+  color: #000;
+  border-color: #fff;
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+}
+
+.page-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  transform: none;
+}
