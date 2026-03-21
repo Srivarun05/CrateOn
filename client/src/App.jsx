@@ -6,7 +6,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import Home from './pages/dashboard/Home';
-import GameDetails from './components/dashboard/GameDetails';
+// import GameDetails from './components/dashboard/GameDetails';
 import Wishlist from './pages/dashboard/Wishlist';
 import ManageUsers from './pages/admin/ManageUsers';
 import AdminDashboard from './pages/admin/AdminDashboard';
