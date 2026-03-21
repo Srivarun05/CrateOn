@@ -59,7 +59,6 @@ const Wishlist = () => {
   return (
     <div className="steam-dashboard">
       <TopNav />
-      {/* Reusing SubNav, but you can create a custom one if you want */}
       <SubNav /> 
 
       <main className="dashboard-main" style={{ marginTop: '40px' }}>

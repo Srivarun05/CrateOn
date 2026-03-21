@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Api from '../../Api'; 
 import TopNav from '../../components/layout/TopNav';
 import SubNav from '../../components/layout/SubNav';
@@ -169,7 +170,7 @@ const Home = () => {
                   disabled={currentPage === 1}
                   className="page-btn"
                 >
-                  Prev
+                 <ChevronLeft size={18} />
                 </button>
 
                 {[...Array(totalPages)].map((_, index) => (
@@ -187,7 +188,7 @@ const Home = () => {
                   disabled={currentPage === totalPages}
                   className="page-btn"
                 >
-                  Next
+                  <ChevronRight size={18} />
                 </button>
               </div>
             )}
@@ -195,7 +196,6 @@ const Home = () => {
         )}
       </main>
 
-      {/* --- MODALS --- */}
       {isModalOpen && (
         <GameModal 
           isOpen={isModalOpen} 

@@ -149,7 +149,7 @@
   cursor: pointer;
   margin-top: 16px;
   transition: all 0.2s;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.89); /* Button shadow */
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.89); 
 }
 
 .save-profile-btn:hover:not(:disabled) {
@@ -216,8 +216,8 @@
 .profile-input-wrapper input:focus {
   background-color: #333;
   border-color: #fff;
-  transform: translateY(-2px); /* Lifts the whole box up slightly */
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 0 2px rgba(255, 255, 255, 0.1); /* Deep shadow + outer glow */
+  transform: translateY(-2px); 
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 0 2px rgba(255, 255, 255, 0.1); 
 }
 
 .profile-input-icon {
