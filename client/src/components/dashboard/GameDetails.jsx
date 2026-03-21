@@ -102,7 +102,18 @@ const GameDetails = ({ isOpen, onClose, game }) => {
         </button>
 
         <div className="details-image-section">
-          <img src={getImageUrl(game.image || game.imageUrl)} alt={game.name} className="details-cover-image" />
+          <div 
+            className="details-blur-background"
+            style={{ 
+              backgroundImage: `url(${getImageUrl(game.image || game.imageUrl)})` 
+            }} 
+          />
+          
+          <img 
+            src={getImageUrl(game.image || game.imageUrl)} 
+            alt={game.name} 
+            className="details-cover-image" 
+          />
         </div>
 
         <div className="details-info-section">
@@ -183,6 +194,7 @@ const GameDetails = ({ isOpen, onClose, game }) => {
             </div>
           </div>
         </div>
+        
         <GuestModal 
           isOpen={showGuestModal} 
           onClose={() => setShowGuestModal(false)} 
