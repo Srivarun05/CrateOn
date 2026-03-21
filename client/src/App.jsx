@@ -23,7 +23,7 @@ function App() {
 
           <Route element={<ProtectedRoute />}>
             <Route path="/home" element={<Home />} />
-            <Route path="/game/:id" element={<GameDetails />} />
+            {/* <Route path="/game/:id" element={<GameDetails />} /> */}
           </Route>
 
           <Route element={<ProtectedRoute allowedRoles={['admin']} />}>

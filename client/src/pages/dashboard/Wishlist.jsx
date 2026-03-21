@@ -20,7 +20,7 @@ const Wishlist = () => {
 
   useEffect(() => {
     if (!user) {
-      navigate('/'); // Kick guests out of this page
+      navigate('/'); 
       return;
     }
     fetchMyWishlist();
@@ -28,12 +28,10 @@ const Wishlist = () => {
 
   const fetchMyWishlist = async () => {
     try {
-      // Your backend favoriteController returns: { data: [{ game: { ...gameDetails } }] }
       const response = await Api.get('/favorites');
       
-      // Extract the populated 'game' objects from the favorites array
       const games = response.data.data.map(fav => fav.game);
-      setWishlistGames(games.filter(g => g !== null)); // Filter out any nulls just in case
+      setWishlistGames(games.filter(g => g !== null)); 
     } catch (error) {
       console.error("Failed to fetch wishlist", error);
     } finally {
@@ -44,7 +42,6 @@ const Wishlist = () => {
   const handleToggleFavorite = async (gameId) => {
     try {
       await Api.post(`/favorites/${gameId}`);
-      // If we click the heart here, instantly remove it from the screen!
       setWishlistGames(wishlistGames.filter(game => game._id !== gameId));
     } catch (error) {
       console.error("Failed to remove from wishlist", error);
@@ -75,9 +72,9 @@ const Wishlist = () => {
                 <GameCard 
                   key={game._id} 
                   game={game} 
-                  onEdit={() => {}} // Not needed here
+                  onEdit={() => {}} 
                   onViewDetails={handleViewDetails} 
-                  isFavorited={true} // Everything here is favorited!
+                  isFavorited={true} 
                   onToggleFavorite={handleToggleFavorite}
                 />
               ))

@@ -30,7 +30,7 @@ export const getGameComments = async (req, res, next) => {
     try {
         const gameId = req.params.gameId;
 
-        const comments = await Comment.find({ game: gameId }).populate("user", "username");
+        const comments = await Comment.find({ game: gameId }).populate("user", "username profilePic");
 
         res.status(200).json({
             success: true,
@@ -52,7 +52,6 @@ export const updateComment = async (req, res, next) => {
             res.status(404);
             throw new Error("Comment not found");
         }
-
         if (existingComment.user.toString() !== req.user._id.toString() && req.user.role !== "admin") {
             res.status(403); 
             throw new Error("You are not authorized to edit this comment");
@@ -77,14 +76,14 @@ export const deleteComment = async (req, res, next) => {
             throw new Error("Comment not found");
         }
 
-        if (req.user.role !== "admin") {
+        if (existingComment.user.toString() !== req.user._id.toString() && req.user.role !== "admin") {
             res.status(403);
-            throw new Error("Only administrators are authorized to delete comments");
+            throw new Error("You are not authorized to delete this comment");
         }
 
         await Comment.findByIdAndDelete(commentId);
 
-        res.status(200).json({ success: true, message: "Comment deleted successfully by Admin" });
+        res.status(200).json({ success: true, message: "Comment deleted successfully" });
     } catch (error) {
         next(error);
     }

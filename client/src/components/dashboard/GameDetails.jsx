@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Trash2, Send, Edit2, Check } from 'lucide-react';
+import { X, Trash2, Send, Edit2, Check, AlertTriangle } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Api from '../../Api';
 import GameRating from '../../pages/dashboard/GameRating';
@@ -12,7 +12,6 @@ const getImageUrl = (imagePath) => {
   return `http://localhost:8000/${imagePath.replace(/\\/g, "/")}`; 
 };
 
-// 👇 Restored the props!
 const GameDetails = ({ isOpen, onClose, game }) => {
   const { user } = useAuth();
   const isAdmin = user?.role === 'admin';
@@ -22,9 +21,10 @@ const GameDetails = ({ isOpen, onClose, game }) => {
   const [newComment, setNewComment] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   
-  const [activeComment, setActiveComment] = useState(null);
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editCommentText, setEditCommentText] = useState('');
+
+  const [deleteModal, setDeleteModal] = useState({ isOpen: false, commentId: null });
 
   useEffect(() => {
     if (isOpen && game) {
@@ -32,14 +32,14 @@ const GameDetails = ({ isOpen, onClose, game }) => {
     } else {
       setComments([]); 
       setNewComment('');
-      setActiveComment(null);
       setEditingCommentId(null);
+      setDeleteModal({ isOpen: false, commentId: null });
     }
   }, [isOpen, game]);
 
   const fetchComments = async () => {
     try {
-      const response = await Api.get(`/comments/${game._id}`);
+      const response = await Api.get(`/comments/${game._id || game.id}`);
       setComments(response.data.data || []);
     } catch (error) {
       console.error("Could not fetch comments", error);
@@ -55,7 +55,7 @@ const GameDetails = ({ isOpen, onClose, game }) => {
     if (!newComment.trim()) return;
     setIsSubmitting(true);
     try {
-      await Api.post(`/comments/${game._id}`, { comment: newComment });
+      await Api.post(`/comments/${game._id || game.id}`, { comment: newComment });
       setNewComment('');
       fetchComments(); 
     } catch (error) {
@@ -65,14 +65,18 @@ const GameDetails = ({ isOpen, onClose, game }) => {
     }
   };
 
-  const handleDeleteComment = async (commentId) => {
-    if (!window.confirm("Delete this comment?")) return;
+  const triggerDelete = (commentId) => {
+    setDeleteModal({ isOpen: true, commentId });
+  };
+
+  const confirmDeleteComment = async () => {
     try {
-      await Api.delete(`/comments/${commentId}`);
-      setActiveComment(null);
+      await Api.delete(`/comments/${deleteModal.commentId}`);
       fetchComments(); 
     } catch (error) {
       console.error("Failed to delete comment", error);
+    } finally {
+      setDeleteModal({ isOpen: false, commentId: null });
     }
   };
 
@@ -85,16 +89,10 @@ const GameDetails = ({ isOpen, onClose, game }) => {
     try {
       await Api.put(`/comments/${commentId}`, { comment: editCommentText });
       setEditingCommentId(null);
-      setActiveComment(null);
       fetchComments();
     } catch (error) {
       console.error("Failed to update comment", error);
     }
-  };
-
-  const closeCommentModal = () => {
-    setActiveComment(null);
-    setEditingCommentId(null);
   };
 
   if (!isOpen || !game) return null;
@@ -105,7 +103,6 @@ const GameDetails = ({ isOpen, onClose, game }) => {
     <div className="modal-overlay" onClick={onClose}>
       <div className="details-modal-content" onClick={e => e.stopPropagation()}>
         
-        {/* 👇 Restored the X Close Button */}
         <button className="details-close-btn" onClick={onClose}>
           <X size={20} />
         </button>
@@ -120,7 +117,7 @@ const GameDetails = ({ isOpen, onClose, game }) => {
           <p className="details-genre">{displayGenre.toUpperCase()}</p>
           <p className="details-desc">{game.description}</p>
 
-          <GameRating gameId={game._id} />
+          <GameRating gameId={game._id || game.id} />
 
           <div className="comments-container">
             <h3 className="comments-header">Community Discussions ({comments.length})</h3>
@@ -137,76 +134,111 @@ const GameDetails = ({ isOpen, onClose, game }) => {
                 <Send size={16} /> Post
               </button>
             </form>
-
             <div className="comment-list">
               {comments.length > 0 ? (
-                comments.map(commentObj => (
-                  <div key={commentObj._id} className="comment-item clickable-comment" onClick={() => setActiveComment(commentObj)}>
-                    <div className="comment-user">
-                      <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', color: '#fff', fontWeight: 'bold' }}>
-                        {(commentObj.user?.username || 'P')[0].toUpperCase()}
+                comments.map(commentObj => {
+                  
+                  const currentUserId = user?._id || user?.id;
+                  const commentUserId = commentObj.user?._id || commentObj.user?.id;
+                  
+                  const isOwner = Boolean(currentUserId && commentUserId && String(currentUserId) === String(commentUserId));
+                  
+                  const canEdit = isOwner || isAdmin;
+                  const canDelete = isOwner || isAdmin;
+
+                  return (
+                    <div key={commentObj._id} className="comment-item">
+                      <div className="comment-header-row">
+                        <div className="comment-user">
+                          <div className="user-avatar" style={{ overflow: 'hidden' }}>
+                            {commentObj.user?.profilePic ? (
+                              <img 
+                                src={getImageUrl(commentObj.user.profilePic)} 
+                                alt={commentObj.user.username} 
+                                style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                              />
+                            ) : (
+                              (commentObj.user?.username || 'P')[0].toUpperCase()
+                            )}
+                          </div>
+                          <span>{commentObj.user?.username || 'Player'}</span>
+                        </div>
+
+                        {editingCommentId !== commentObj._id && (
+                          <div className="comment-actions">
+                            
+                            {canEdit && (
+                              <button onClick={() => startEditing(commentObj)} className="comment-edit-btn" title="Edit">
+                                <Edit2 size={14} />
+                              </button>
+                            )}
+                            
+                            {canDelete && (
+                              <button onClick={() => triggerDelete(commentObj._id)} className="delete-btn" title="Delete">
+                                <Trash2 size={14} />
+                              </button>
+                            )}
+                          </div>
+                        )}
                       </div>
-                      {commentObj.user?.username || 'Player'}
+
+                      <div className="comment-body">
+                        {editingCommentId === commentObj._id ? (
+                          <div className="inline-edit-container">
+                            <input 
+                              type="text" 
+                              className="inline-edit-input"
+                              value={editCommentText} 
+                              onChange={(e) => setEditCommentText(e.target.value)} 
+                              autoFocus
+                            />
+                            <button onClick={() => handleUpdateComment(commentObj._id)} className="inline-save-btn" title="Save">
+                              <Check size={16}/>
+                            </button>
+                            <button onClick={() => setEditingCommentId(null)} className="inline-cancel-btn" title="Cancel">
+                              <X size={16}/>
+                            </button>
+                          </div>
+                        ) : (
+                          <p className="comment-text">{commentObj.comment}</p>
+                        )}
+                      </div>
+
                     </div>
-                    <p className="comment-text truncated-comment">{commentObj.comment}</p>
-                  </div>
-                ))
+                  );
+                })
               ) : (
                 <p style={{ color: '#666', fontSize: '13px', fontStyle: 'italic', textAlign: 'center' }}>No comments yet. Start the discussion!</p>
               )}
-            </div>
+            </div>  
           </div>
         </div>
         
         <GuestModal isOpen={showGuestModal} onClose={() => setShowGuestModal(false)} actionText="join the discussion" />
 
-        {/* Comment Popup Modal */}
-        {activeComment && (
-          <div className="modal-overlay" onClick={closeCommentModal}>
-            <div className="comment-popup-content" onClick={e => e.stopPropagation()}>
-              <div className="comment-popup-header">
-                <div className="comment-user">
-                  <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', color: '#fff', fontWeight: 'bold' }}>
-                    {(activeComment.user?.username || 'P')[0].toUpperCase()}
-                  </div>
-                  <span style={{ fontSize: '16px', fontWeight: 'bold', color: '#fff' }}>
-                    {activeComment.user?.username || 'Player'}
-                  </span>
-                </div>
-                <button className="close-popup-btn" onClick={closeCommentModal}><X size={20} /></button>
+        {deleteModal.isOpen && (
+          <div className="modal-overlay" style={{ zIndex: 2000 }} onClick={() => setDeleteModal({ isOpen: false, commentId: null })}>
+            <div className="popup-modal-content" onClick={e => e.stopPropagation()}>
+              <div className="modal-icon-wrapper warning">
+                <Trash2 size={32} color="#ef4444" />
               </div>
-
-              <div className="comment-popup-body">
-                {editingCommentId === activeComment._id ? (
-                  <div className="admin-edit-comment-box" style={{ marginTop: 0 }}>
-                    <textarea 
-                      value={editCommentText} 
-                      onChange={(e) => setEditCommentText(e.target.value)} 
-                      autoFocus
-                      rows="4"
-                      className="edit-comment-textarea"
-                    />
-                  </div>
-                ) : (
-                  <p className="comment-popup-text">{activeComment.comment}</p>
-                )}
+              <h2 style={{ color: '#fff', fontSize: '24px', marginBottom: '12px' }}>Delete Comment?</h2>
+              <p style={{ color: '#888', marginBottom: '32px' }}>This action is permanent and cannot be undone.</p>
+              
+              <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+                <button 
+                  onClick={() => setDeleteModal({ isOpen: false, commentId: null })}
+                  style={{ background: '#333', color: '#fff', border: 'none', padding: '12px 24px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}
+                >
+                  Cancel
+                </button>
+                <button 
+                  onClick={confirmDeleteComment}
+                  style={{ background: '#ef4444', color: '#fff', border: 'none', padding: '12px 24px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}
+                >
+                  Yes, Delete
+                </button>
               </div>
-
-              {(user?._id === activeComment.user?._id || isAdmin) && (
-                <div className="comment-popup-actions">
-                  {editingCommentId === activeComment._id ? (
-                    <>
-                      <button onClick={() => setEditingCommentId(null)} className="action-btn cancel"><X size={16}/> Cancel</button>
-                      <button onClick={() => handleUpdateComment(activeComment._id)} className="action-btn save"><Check size={16}/> Save</button>
-                    </>
-                  ) : (
-                    <>
-                      <button onClick={() => startEditing(activeComment)} className="action-btn edit"><Edit2 size={16}/> Edit</button>
-                      {isAdmin && <button onClick={() => handleDeleteComment(activeComment._id)} className="action-btn delete"><Trash2 size={16}/> Delete</button>}
-                    </>
-                  )}
-                </div>
-              )}
             </div>
           </div>
         )}

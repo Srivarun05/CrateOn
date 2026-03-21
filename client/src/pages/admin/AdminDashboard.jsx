@@ -40,11 +40,10 @@ const AdminDashboard = () => {
       
       <main className="dashboard-main admin-dashboard">
         <div className="admin-header">
-          <h1>Command Center</h1>
-          <p>Welcome back, Admin. Here is what is happening on Crateon today.</p>
+          <h1>Welcome back, Admin</h1>
+          <p>Here is what is happening on Crateon today.</p>
         </div>
 
-        {/* --- LIVE STATS GRID --- */}
         <div className="admin-stats-grid">
           <div className="stat-card glowing-blue">
             <div className="stat-icon"><Users size={28} /></div>
