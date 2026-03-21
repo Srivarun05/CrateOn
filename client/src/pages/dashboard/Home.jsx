@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Api from '../../Api'; 
+import { Search, ChevronLeft, ChevronRight, Filter, X } from 'lucide-react'; 
 import TopNav from '../../components/layout/TopNav';
 import SubNav from '../../components/layout/SubNav';
 import HeroBanner from '../../components/dashboard/HeroBanner';
@@ -11,6 +11,7 @@ import GameModal from '../../components/dashboard/GameModal';
 import GameDetails from '../../components/dashboard/GameDetails';
 import GuestModal from '../../components/common/GuestModal';
 import '../../styles/dashboard.css';
+import '../../styles/Home.css';
 
 const Home = () => {
   const { user } = useAuth();
@@ -31,11 +32,39 @@ const Home = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const gridTopRef = useRef(null);
 
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedGenre, setSelectedGenre] = useState('All');
+
+  const allGenres = ['All', ...new Set(games.flatMap(game => {
+    if (!game.genre) return [];
+    return Array.isArray(game.genre) ? game.genre : [game.genre];
+  }))].sort();
+
+  const filteredGames = games.filter(game => {
+    const matchesSearch = game.name.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    let matchesGenre = false;
+    if (selectedGenre === 'All') {
+      matchesGenre = true;
+    } else if (Array.isArray(game.genre)) {
+      matchesGenre = game.genre.includes(selectedGenre);
+    } else {
+      matchesGenre = game.genre === selectedGenre;
+    }
+
+    return matchesSearch && matchesGenre;
+  });
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, selectedGenre]);
+
+
   let indexOfFirstGame = 0;
   let indexOfLastGame = 6;
   let totalPages = 1;
 
-  if (games.length > 0) {
+  if (filteredGames.length > 0) {
     if (currentPage === 1) {
       indexOfFirstGame = 0;
       indexOfLastGame = 6;
@@ -44,14 +73,14 @@ const Home = () => {
       indexOfLastGame = indexOfFirstGame + 9;
     }
     
-    if (games.length <= 6) {
+    if (filteredGames.length <= 6) {
       totalPages = 1;
     } else {
-      totalPages = 1 + Math.ceil((games.length - 6) / 9);
+      totalPages = 1 + Math.ceil((filteredGames.length - 6) / 9);
     }
   }
 
-  const currentGamesToDisplay = games.slice(indexOfFirstGame, indexOfLastGame);
+  const currentGamesToDisplay = filteredGames.slice(indexOfFirstGame, indexOfLastGame);
 
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -98,10 +127,8 @@ const Home = () => {
       setShowGuestModal(true);
       return; 
     }
-
     try {
       await Api.post(`/favorites/${gameId}`);
-      
       if (favoriteIds.includes(gameId)) {
         setFavoriteIds(favoriteIds.filter(id => id !== gameId)); 
       } else {
@@ -130,7 +157,14 @@ const Home = () => {
   return (
     <div className="steam-dashboard">
       <TopNav />
-      <SubNav onOpenCreateModal={handleOpenCreate} />
+      <SubNav 
+        onOpenCreateModal={handleOpenCreate}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        selectedGenre={selectedGenre}
+        setSelectedGenre={setSelectedGenre}
+        allGenres={allGenres}
+       />
 
       <main className="dashboard-main">
         
@@ -138,10 +172,35 @@ const Home = () => {
           <HeroBanner games={bannerGamesToDisplay} onViewDetails={handleViewDetails} />
         )}
 
-        <div className="section-header" ref={gridTopRef}>
-          Explore Games <div className="section-line"></div>
+        <div className="explore-header-row" ref={gridTopRef}>
+            Explore Games <div className="section-line">
         </div>
-        
+          
+          <div className="filter-ui-container">
+            {selectedGenre !== 'All' && (
+              <button className="clear-filter-btn" onClick={() => setSelectedGenre('All')}>
+                {selectedGenre.toUpperCase()} <X size={14} strokeWidth={3} />
+              </button>
+            )}
+
+            <div className="filter-dropdown-wrapper">
+              <Filter className="filter-icon" size={16} />
+              <select 
+                className="icon-select" 
+                value={selectedGenre} 
+                onChange={(e) => setSelectedGenre(e.target.value)}
+              >
+                <option value="All">Filter by Genre</option>
+                {allGenres.filter(g => g !== 'All').map(genre => (
+                  <option key={genre} value={genre}>
+                    {genre.toUpperCase()}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </div>
+
         {loading ? (
           <p style={{ color: '#888' }}>Loading games from database...</p>
         ) : (
@@ -159,7 +218,9 @@ const Home = () => {
                   />
                 ))
               ) : (
-                <p style={{ color: '#888' }}>No games found. Click "Create Game" to add one!</p>
+                <p style={{ color: '#888', padding: '40px 0', textAlign: 'center', width: '100%' }}>
+                  No games found matching your search. Try different keywords or genres!
+                </p>
               )}
             </div>
 
@@ -170,7 +231,7 @@ const Home = () => {
                   disabled={currentPage === 1}
                   className="page-btn"
                 >
-                 <ChevronLeft size={18} />
+                  <ChevronLeft size={18} />
                 </button>
 
                 {[...Array(totalPages)].map((_, index) => (

@@ -1,9 +1,9 @@
 import React from 'react';
-import { Search, Plus, Users, Heart } from 'lucide-react'; 
+import { Search, Plus, Users, Heart, Filter, X } from 'lucide-react'; 
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-const SubNav = ({ onOpenCreateModal }) => {
+const SubNav = ({ onOpenCreateModal, searchQuery, setSearchQuery, selectedGenre, setSelectedGenre, allGenres }) => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -36,15 +36,44 @@ const SubNav = ({ onOpenCreateModal }) => {
         </div>
       )}
 
-      <div className="search-container" style={{ marginLeft: 'auto' }}>
-        <Search className="search-icon" style={{ left: !isAdmin ? '16px' : '10px' }} />
-        <input 
-          type="text" 
-          className={`search-input ${!isAdmin ? 'large' : ''}`} 
-          placeholder="Search your library..." 
-        />
+      <div className="right-controls" style={{ display: 'flex', alignItems: 'center', gap: '12px', marginLeft: 'auto' }}>
+        
+        {selectedGenre && selectedGenre !== 'All' && (
+          <button className="clear-filter-btn" onClick={() => setSelectedGenre && setSelectedGenre('All')}>
+            {selectedGenre.toUpperCase()} <X size={14} strokeWidth={3} />
+          </button>
+        )}
+
+        {allGenres && allGenres.length > 0 && (
+          <div className="filter-dropdown-wrapper">
+            <Filter className="filter-icon" size={16} />
+            <select 
+              className="icon-select" 
+              value={selectedGenre} 
+              onChange={(e) => setSelectedGenre && setSelectedGenre(e.target.value)}
+            >
+              <option value="All">Filter by Genre</option>
+              {allGenres.filter(g => g !== 'All').map(genre => (
+                <option key={genre} value={genre}>
+                  {genre.toUpperCase()}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        <div className="search-container" style={{ position: 'relative' }}>
+          <Search className="search-icon" style={{ left: !isAdmin ? '16px' : '10px' }} />
+          <input 
+            type="text" 
+            className={`search-input ${!isAdmin ? 'large' : ''}`} 
+            placeholder="Search your library..." 
+            value={searchQuery || ''}
+            onChange={(e) => setSearchQuery && setSearchQuery(e.target.value)}
+          />
+        </div>
+
       </div>
-      
     </div>
   );
 };
