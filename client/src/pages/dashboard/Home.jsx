@@ -183,7 +183,7 @@ const Home = () => {
               </button>
             )}
 
-            <div className="filter-dropdown-wrapper">
+            {/* <div className="filter-dropdown-wrapper">
               <Filter className="filter-icon" size={16} />
               <select 
                 className="icon-select" 
@@ -197,7 +197,7 @@ const Home = () => {
                   </option>
                 ))}
               </select>
-            </div>
+            </div> */}
           </div>
         </div>
 
