@@ -8,7 +8,7 @@ import '../../styles/admin.css';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
-  const [stats, setStats] = useState({ users: 0, games: 0 });
+  const [stats, setStats] = useState({ users: 0, admins: 0, games: 0 });
   const [isLoading, setIsLoading] = useState(true);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
@@ -20,9 +20,14 @@ const AdminDashboard = () => {
           Api.get('/users') 
         ]);
 
+        const usersList = usersRes.data.data || usersRes.data || [];
+        const adminCount = usersList.filter(u => u.role === 'admin').length;
+        const userCount = usersList.filter(u => u.role !== 'admin').length;
+
         setStats({
           games: gamesRes.data.data?.length || gamesRes.data?.length || 0,
-          users: usersRes.data.data?.length || usersRes.data?.length || 0
+          users: userCount,
+          admins: adminCount
         });
       } catch (error) {
         console.error("Failed to load admin stats", error);
@@ -49,7 +54,9 @@ const AdminDashboard = () => {
             <div className="stat-icon"><Users size={28} /></div>
             <div className="stat-info">
               <h3>Total Users</h3>
-              <h2>{isLoading ? '...' : stats.users}</h2>
+              <h2 style={{ fontSize: '24px', marginTop: '4px' }}>
+                {isLoading ? '...' : `${stats.admins} Admin | ${stats.users} Users`}
+              </h2>
             </div>
           </div>
 

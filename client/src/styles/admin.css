@@ -336,3 +336,25 @@
   color: #fff;
 }
 
+.edit-user-btn {
+  background: transparent;
+  border: none;
+  color: #666;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit-user-btn:hover:not(:disabled) {
+  background: rgba(59, 130, 246, 0.1); 
+  color: #3b82f6; 
+}
+
+.edit-user-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}

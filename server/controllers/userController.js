@@ -1,7 +1,6 @@
 import User from "../models/User.js"; 
 import fs from "fs";
 
-
 export const getUsers = async (req, res, next) => {
     try {
         const users = await User.find({}).select("-password");
@@ -82,6 +81,55 @@ export const updateUserProfile = async (req, res, next) => {
                 profilePic: updatedUser.profilePic,
                 role: updatedUser.role
             }
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const updateUserByAdmin = async (req, res, next) => {
+    try {
+        const user = await User.findById(req.params.id);
+        
+        if (!user) {
+            res.status(404);
+            throw new Error("User not found");
+        }
+
+        user.username = req.body.username || user.username;
+        user.email = req.body.email || user.email;
+
+        const updatedUser = await user.save();
+
+        res.status(200).json({ 
+            success: true, 
+            data: updatedUser 
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const updateUserRole = async (req, res, next) => {
+    try {
+        const user = await User.findById(req.params.id);
+        
+        if (!user) {
+            res.status(404);
+            throw new Error("User not found");
+        }
+
+        if (user._id.toString() === req.user._id.toString()) {
+            res.status(400);
+            throw new Error("You cannot change your own role");
+        }
+
+        user.role = req.body.role || user.role;
+        const updatedUser = await user.save();
+
+        res.status(200).json({ 
+            success: true, 
+            data: updatedUser 
         });
     } catch (error) {
         next(error);
