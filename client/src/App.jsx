@@ -9,6 +9,7 @@ import Home from './pages/dashboard/Home';
 import GameDetails from './components/dashboard/GameDetails';
 import Wishlist from './pages/dashboard/Wishlist';
 import ManageUsers from './pages/admin/ManageUsers';
+import AdminDashboard from './pages/admin/AdminDashboard';
 
 function App() {
   return (
@@ -23,12 +24,10 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route path="/home" element={<Home />} />
             <Route path="/game/:id" element={<GameDetails />} />
-            <Route path="/profile" element={<div>Profile Page</div>} />
           </Route>
 
           <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
-            <Route path="/admin" element={<div>Admin Dashboard Page</div>} />
-            <Route path="/manage-games" element={<div>Manage Global Games</div>} />
+            <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/users" element={<ManageUsers />} />
           </Route> 
 

@@ -162,3 +162,153 @@
   border-color: rgba(239, 68, 68, 0.2);
   box-shadow: 0 8px 16px rgba(239, 68, 68, 0.1);
 }
+
+.admin-dashboard {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding-top: 40px;
+}
+
+.admin-header {
+  margin-bottom: 40px;
+}
+
+.admin-header h1 {
+  font-size: 36px;
+  margin-bottom: 8px;
+  background: linear-gradient(to right, #fff, #888);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.admin-header p {
+  color: #888;
+  font-size: 16px;
+}
+
+/* --- STATS GRID --- */
+.admin-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+.stat-card {
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Glowing Accent Bars on the left of cards */
+.stat-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+}
+
+.glowing-blue::before { background: #3b82f6; box-shadow: 0 0 15px #3b82f6; }
+.glowing-purple::before { background: #8b5cf6; box-shadow: 0 0 15px #8b5cf6; }
+.glowing-green::before { background: #10b981; box-shadow: 0 0 15px #10b981; }
+
+.stat-icon {
+  width: 56px;
+  height: 56px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+
+.stat-info h3 {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 4px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.stat-info h2 {
+  font-size: 32px;
+  color: #fff;
+}
+
+/* --- QUICK ACTIONS --- */
+.section-title {
+  font-size: 20px;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+.admin-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 24px;
+}
+
+.action-card {
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.action-card:hover {
+  background: #1a1a1a;
+  border-color: #555;
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.action-icon-wrapper {
+  background: #222;
+  padding: 16px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.action-card:hover .action-icon-wrapper {
+  background: #fff;
+}
+
+.action-card:hover .action-icon-wrapper svg {
+  stroke: #000; /* Turns the icon black on hover */
+}
+
+.action-text h3 {
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+
+.action-text p {
+  font-size: 14px;
+  color: #888;
+}
+
+.action-arrow {
+  margin-left: auto;
+  color: #555;
+  transition: all 0.3s ease;
+}
+
+.action-card:hover .action-arrow {
+  color: #fff;
+  transform: translateX(4px);
+}
