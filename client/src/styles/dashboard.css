@@ -301,12 +301,16 @@
     background-color: #121212;
     display: flex;
     flex-direction: column; 
-    border: 1px solid #222; 
-    transition: transform 0.2s, border-color 0.2s;
+    border: 1px solid #222;
+    border-radius: 12px; 
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
     height: 100%; 
     overflow: hidden;
     cursor: pointer; 
     position: relative;
+    transform: perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1);
+    transform-style: preserve-3d;
+    will-change: transform;
 }
 
 .edit-btn { 
@@ -335,8 +339,9 @@
 }
 
 .game-card:hover { 
-    transform: translateY(-4px); 
-    border-color: #555; 
+    border-color: #ffffff;
+    box-shadow: inset 0 0 0 1px #ffffff;
+    z-index: 10;
 }
 
 .card-image-wrapper { 
