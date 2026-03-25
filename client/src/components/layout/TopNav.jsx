@@ -52,24 +52,24 @@ const TopNav = () => {
         </div>
 
         <div className="header-right">
-          <div 
+          
+          <button 
             className="user-profile-btn" 
             onClick={() => setIsProfileOpen(true)}
-            style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}
           >
             {user?.profilePic ? (
               <img 
                 src={getImageUrl(user.profilePic)} 
                 alt="Avatar" 
-                style={{ width: '20px', height: '20px', borderRadius: '50%', objectFit: 'cover' }} 
+                className="nav-avatar-img"
               />
             ) : (
               <UserIcon size={16} />
             )}
-            {user?.username ? user.username.toUpperCase() : 'GUEST'}
-          </div>
+            <span>{user?.username ? user.username.toUpperCase() : 'GUEST'}</span>
+          </button>
           
-          <div className="action-icon" onClick={handleLogout} title="Logout">
+          <div className="action-icon" onClick={handleLogout} title="Logout" style={{ cursor: 'pointer' }}>
             <LogOut size={18} />
           </div>
         </div>

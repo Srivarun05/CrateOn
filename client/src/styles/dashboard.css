@@ -94,6 +94,15 @@
     transition: background 0.2s; 
 }
 
+.nav-avatar-img {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: #222;
+  border: 1px solid #444; 
+}
+
 .user-profile-btn:hover { 
     background-color: #2a2a2a; 
 }
