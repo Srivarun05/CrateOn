@@ -14,7 +14,7 @@ export const setGameStatus = async (req, res, next) => {
         const gameStatus = await GameStatus.findOneAndUpdate(
             { user: userId, game: gameId },
             { status },
-            { new: true, upsert: true }
+            { returnDocument: 'after', upsert: true }
         );
         res.status(200).json({ success: true, data: gameStatus });
     } catch (error) { next(error); }
