@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, Plus, Users, Heart, Filter, X } from 'lucide-react'; 
+import { Search, Plus, Users, Heart, Filter, X, Library } from 'lucide-react'; 
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -24,6 +24,17 @@ const SubNav = ({ onOpenCreateModal, searchQuery, setSearchQuery, selectedGenre,
           </button>
         )}
       </div>
+
+      {user && (
+        <button 
+          className="admin-action-btn" 
+          onClick={() => navigate('/status')}
+          style={{ display: 'flex', alignItems: 'center', gap: '8px', background: location.pathname === '/status' ? '#333' : 'transparent', 
+            color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }} 
+        >
+          <Library size={16} fill={location.pathname === '/status' ? '#fff' : 'none'}/> My Library
+        </button>
+      )}
 
       {isAdmin && (
         <div className="admin-actions" style={{ display: 'flex', gap: '12px' }}>

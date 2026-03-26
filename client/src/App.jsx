@@ -10,6 +10,7 @@ import Home from './pages/dashboard/Home';
 import Wishlist from './pages/dashboard/Wishlist';
 import ManageUsers from './pages/admin/ManageUsers';
 import AdminDashboard from './pages/admin/AdminDashboard';
+import MyStatus from './pages/dashboard/MyStatus';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/status" element={<MyStatus />} />
 
           <Route element={<ProtectedRoute />}>
             <Route path="/home" element={<Home />} />

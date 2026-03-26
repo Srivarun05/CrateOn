@@ -18,6 +18,10 @@ const GameDetails = ({ isOpen, onClose, game }) => {
 
   const [showGuestModal, setShowGuestModal] = useState(false);
   const [comments, setComments] = useState([]);
+
+  const [currentStatus, setCurrentStatus] = useState('');
+  const [isStatusLoading, setIsStatusLoading] = useState(false);
+
   const [newComment, setNewComment] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   
@@ -25,6 +29,21 @@ const GameDetails = ({ isOpen, onClose, game }) => {
   const [editCommentText, setEditCommentText] = useState('');
 
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, commentId: null });
+
+  useEffect(() => {
+    if (isOpen && game && user) {
+      const fetchCurrentStatus = async () => {
+        try {
+          const response = await Api.get('/status');
+          const existingStatus = response.data.data.find(s => s.game._id === game._id);
+          setCurrentStatus(existingStatus ? existingStatus.status : '');
+        } catch (error) {
+          console.error("Failed to fetch status");
+        }
+      };
+      fetchCurrentStatus();
+    }
+  }, [isOpen, game, user]);
 
   useEffect(() => {
     if (isOpen && game) {
@@ -36,6 +55,22 @@ const GameDetails = ({ isOpen, onClose, game }) => {
       setDeleteModal({ isOpen: false, commentId: null });
     }
   }, [isOpen, game]);
+
+  const handleStatusChange = async (e) => {
+    if (!user) return setShowGuestModal(true);
+    
+    const newStatus = e.target.value;
+    setCurrentStatus(newStatus);
+    setIsStatusLoading(true);
+    
+    try {
+      await Api.put(`/status/${game._id}`, { status: newStatus });
+    } catch (error) {
+      console.error("Failed to update status", error);
+    } finally {
+      setIsStatusLoading(false);
+    }
+  };
 
   const fetchComments = async () => {
     try {
@@ -118,6 +153,34 @@ const GameDetails = ({ isOpen, onClose, game }) => {
           <p className="details-desc">{game.description}</p>
 
           <GameRating gameId={game._id || game.id} />
+          
+          <div className="status-tracker" style={{ display: 'flex', gap: '12px', alignItems: 'center', marginBottom: '32px' }}>
+            <select 
+              value={currentStatus} 
+              onChange={handleStatusChange}
+              disabled={isStatusLoading}
+              style={{ 
+                background: '#111', color: '#fff', border: '1px solid #333', 
+                padding: '10px 16px', borderRadius: '8px', cursor: 'pointer', outline: 'none' 
+              }}
+            >
+              <option value="">+ Add to Library...</option>
+              <option value="Playing">▶ Playing</option>
+              <option value="Plan to Play">📅 Plan to Play</option>
+              <option value="Completed">★ Completed</option>
+              <option value="Paused">⏸ Paused</option>
+              <option value="Dropped">✖ Dropped</option>
+            </select>
+
+            {currentStatus && (
+              <button 
+                onClick={() => window.location.href = '/status'} 
+                style={{ background: 'transparent', color: '#3b82f6', border: 'none', cursor: 'pointer', fontSize: '14px', fontWeight: '600' }}
+              >
+                View in Library →
+              </button>
+            )}
+          </div>
 
           <div className="comments-container">
             <h3 className="comments-header">Community Discussions ({comments.length})</h3>
