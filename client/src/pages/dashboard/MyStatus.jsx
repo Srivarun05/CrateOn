@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Api from '../../Api';
 import TopNav from '../../components/layout/TopNav';
 import { Play, Calendar, CheckCircle, Pause, XCircle } from 'lucide-react';
+import LibraryEditModal from '../../components/dashboard/LibraryEditModal'; 
 
 const getImageUrl = (imagePath) => {
   if (!imagePath) return '';
@@ -23,6 +24,9 @@ const MyStatus = () => {
   const [statuses, setStatuses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('Playing');
+
+  const [selectedRecord, setSelectedRecord] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const fetchLibrary = async () => {
     try {
@@ -57,7 +61,6 @@ const MyStatus = () => {
         <h1 style={{ fontSize: '36px', fontWeight: '800', marginBottom: '8px' }}>My Library</h1>
         <p style={{ color: '#888', marginBottom: '32px' }}>Track and manage your gaming journey.</p>
 
-        {/* --- TABS --- */}
         <div style={{ display: 'flex', gap: '12px', marginBottom: '32px', borderBottom: '1px solid #333', paddingBottom: '16px', overflowX: 'auto' }}>
           {STATUS_CATEGORIES.map(cat => (
             <button
@@ -77,7 +80,6 @@ const MyStatus = () => {
           ))}
         </div>
 
-        {/* --- GRID --- */}
         {loading ? (
           <p style={{ color: '#888' }}>Loading library...</p>
         ) : displayedGames.length === 0 ? (
@@ -88,12 +90,19 @@ const MyStatus = () => {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '24px' }}>
             {displayedGames.map(({ game, status }) => (
               <div key={game._id} style={{ background: '#111', borderRadius: '12px', border: '1px solid #333', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-                <img src={getImageUrl(game.image)} alt={game.name} style={{ width: '100%', height: '160px', objectFit: 'cover' }} />
                 
-                <div style={{ padding: '16px', flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-                  <h3 style={{ fontSize: '18px', marginBottom: '16px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{game.name}</h3>
-                  
-                  {/* --- COMPACT STATUS PILLS --- */}
+                <div 
+                  onClick={() => { setSelectedRecord({ game, status }); setIsModalOpen(true); }}
+                  style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', flexGrow: 1 }}
+                  title="Click to edit tracking details"
+                >
+                  <img src={getImageUrl(game.image)} alt={game.name} style={{ width: '100%', height: '160px', objectFit: 'cover' }} />
+                  <div style={{ padding: '16px 16px 0 16px' }}>
+                    <h3 style={{ fontSize: '18px', marginBottom: '16px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{game.name}</h3>
+                  </div>
+                </div>
+                
+                <div style={{ padding: '0 16px 16px 16px', display: 'flex', flexDirection: 'column' }}>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: 'auto' }}>
                     {[
                       { label: 'Completed', value: 'Completed', color: '#84cc16' },
@@ -106,13 +115,16 @@ const MyStatus = () => {
                       return (
                         <button
                           key={opt.value}
-                          onClick={() => handleUpdateStatus(game._id, isActive ? '' : opt.value)}
+                          onClick={(e) => {
+                            e.stopPropagation(); 
+                            handleUpdateStatus(game._id, isActive ? '' : opt.value);
+                          }}
                           style={{
                             flex: '1 1 auto', 
                             textAlign: 'center',
                             background: isActive ? opt.color : 'rgba(0,0,0,0.3)',
                             color: isActive ? '#000' : opt.color,
-                            border: `1px solid ${isActive ? opt.color : opt.color + '40'}`,
+                            border: `1px solid ${isActive ? '#fff' : '#333'}`,
                             padding: '6px 8px',
                             borderRadius: '6px',
                             fontSize: '11px',
@@ -129,13 +141,21 @@ const MyStatus = () => {
                       );
                     })}
                   </div>
-
                 </div>
+
               </div>
             ))}
           </div>
         )}
       </main>
+
+      <LibraryEditModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        statusRecord={selectedRecord} 
+        onSaveSuccess={fetchLibrary} 
+      />
+
     </div>
   );
 };

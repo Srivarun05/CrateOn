@@ -1,0 +1,133 @@
+.tracker-modal-content {
+  background: #000; 
+  width: 90%;
+  max-width: 800px;
+  border: 1px solid #222; 
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9);
+  animation: slideUp 0.3s ease-out;
+}
+
+.tracker-hero {
+  position: relative;
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: flex-end;
+  padding: 20px 30px;
+  border-bottom: 1px solid #222;
+}
+
+.tracker-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, #000 5%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.2) 100%);
+}
+
+.tracker-hero-content {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: flex-end;
+  gap: 24px;
+  width: 100%;
+}
+
+.tracker-cover {
+  width: 100px;
+  height: 140px;
+  border-radius: 6px;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.8);
+  margin-bottom: -40px;
+  border: 2px solid #000;
+}
+
+.tracker-title {
+  color: #fff;
+  font-size: 28px;
+  font-weight: 800;
+  flex-grow: 1;
+  margin-bottom: 10px;
+}
+
+.tracker-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(0,0,0,0.6);
+  border: 1px solid #333;
+  color: #fff;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 20;
+}
+
+.tracker-save-top-btn {
+  background: #fff; 
+  color: #000; 
+  border: none;
+  padding: 8px 24px;
+  border-radius: 4px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  transition: all 0.2s ease;
+}
+
+.tracker-save-top-btn:hover {
+  background: #ccc; 
+}
+
+.tracker-form {
+  padding: 60px 30px 40px 30px;
+}
+
+.tracker-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+}
+
+.tracker-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tracker-group label {
+  color: #fff; 
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.tracker-group input, 
+.tracker-group select, 
+.tracker-group textarea {
+  background: #111; 
+  border: 1px solid #222;
+  color: #fff;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.tracker-group input:focus, 
+.tracker-group select:focus, 
+.tracker-group textarea:focus {
+  box-shadow: #fff;
+}
