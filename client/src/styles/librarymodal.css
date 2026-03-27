@@ -6,7 +6,8 @@
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9);
-  animation: slideUp 0.3s ease-out;
+  position: relative;
+  animation: trackerModalPop 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .tracker-hero {
@@ -40,9 +41,12 @@
   height: 140px;
   border-radius: 6px;
   object-fit: cover;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.8);
+  box-shadow: 0 8px 30px rgba(255, 255, 255, 0.15); 
   margin-bottom: -40px;
   border: 2px solid #000;
+  position: relative;
+  opacity: 0; 
+  animation: trackerCoverFloat 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
 }
 
 .tracker-title {
@@ -89,8 +93,15 @@
   background: #ccc; 
 }
 
+.tracker-title, .tracker-save-top-btn {
+  opacity: 0; 
+  animation: trackerTextSlide 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.25s forwards;
+}
+
 .tracker-form {
   padding: 60px 30px 40px 30px;
+  opacity: 0; 
+  animation: trackerFormSlide 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.35s forwards;
 }
 
 .tracker-grid {
@@ -130,4 +141,24 @@
 .tracker-group select:focus, 
 .tracker-group textarea:focus {
   box-shadow: #fff;
+}
+
+@keyframes trackerModalPop {
+  0% { opacity: 0; transform: scale(0.95) translateY(20px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes trackerCoverFloat {
+  0% { opacity: 0; transform: translateY(40px) scale(0.9); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes trackerTextSlide {
+  0% { opacity: 0; transform: translateX(-20px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes trackerFormSlide {
+  0% { opacity: 0; transform: translateY(40px); }
+  100% { opacity: 1; transform: translateY(0); }
 }

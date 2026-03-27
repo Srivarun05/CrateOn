@@ -88,63 +88,70 @@ const MyStatus = () => {
           </div>
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '24px' }}>
-            {displayedGames.map(({ game, status }) => (
-              <div key={game._id} style={{ background: '#111', borderRadius: '12px', border: '1px solid #333', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-                
-                <div 
-                  onClick={() => { setSelectedRecord({ game, status }); setIsModalOpen(true); }}
-                  style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', flexGrow: 1 }}
-                  title="Click to edit tracking details"
-                >
-                  <img src={getImageUrl(game.image)} alt={game.name} style={{ width: '100%', height: '160px', objectFit: 'cover' }} />
-                  <div style={{ padding: '16px 16px 0 16px' }}>
-                    <h3 style={{ fontSize: '18px', marginBottom: '16px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{game.name}</h3>
+            
+            {displayedGames.map((record) => {
+              const { game, status } = record; 
+              
+              return (
+                <div key={game._id} style={{ background: '#111', borderRadius: '12px', border: '1px solid #333', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+                  
+                  <div 
+                    onClick={() => { setSelectedRecord(record); setIsModalOpen(true); }}
+                    style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', flexGrow: 1 }}
+                    title="Click to edit tracking details"
+                  >
+                    <img src={getImageUrl(game.image)} alt={game.name} style={{ width: '100%', height: '160px', objectFit: 'cover' }} />
+                    <div style={{ padding: '16px 16px 0 16px' }}>
+                      <h3 style={{ fontSize: '18px', marginBottom: '16px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{game.name}</h3>
+                    </div>
                   </div>
-                </div>
-                
-                <div style={{ padding: '0 16px 16px 16px', display: 'flex', flexDirection: 'column' }}>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: 'auto' }}>
-                    {[
-                      { label: 'Completed', value: 'Completed', color: '#84cc16' },
-                      { label: 'Planning', value: 'Plan to Play', color: '#0ea5e9' },
-                      { label: 'Playing', value: 'Playing', color: '#a855f7' },
-                      { label: 'Paused', value: 'Paused', color: '#f59e0b' },
-                      { label: 'Dropped', value: 'Dropped', color: '#fb7185' }
-                    ].map(opt => {
-                      const isActive = status === opt.value;
-                      return (
-                        <button
-                          key={opt.value}
-                          onClick={(e) => {
-                            e.stopPropagation(); 
-                            handleUpdateStatus(game._id, isActive ? '' : opt.value);
-                          }}
-                          style={{
-                            flex: '1 1 auto', 
-                            textAlign: 'center',
-                            background: isActive ? opt.color : 'rgba(0,0,0,0.3)',
-                            color: isActive ? '#000' : opt.color,
-                            border: `1px solid ${isActive ? '#fff' : '#333'}`,
-                            padding: '6px 8px',
-                            borderRadius: '6px',
-                            fontSize: '11px',
-                            fontWeight: '700',
-                            cursor: 'pointer',
-                            transition: 'all 0.2s ease',
-                            textTransform: 'uppercase',
-                            letterSpacing: '0.5px'
-                          }}
-                          title={isActive ? "Click to remove from library" : `Move to ${opt.label}`}
-                        >
-                          {opt.label}
-                        </button>
-                      );
-                    })}
+                  
+                  <div style={{ padding: '0 16px 16px 16px', display: 'flex', flexDirection: 'column' }}>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: 'auto' }}>
+                      {[
+                        { label: 'Completed', value: 'Completed', color: '#84cc16' },
+                        { label: 'Planning', value: 'Plan to Play', color: '#0ea5e9' },
+                        { label: 'Playing', value: 'Playing', color: '#a855f7' },
+                        { label: 'Paused', value: 'Paused', color: '#f59e0b' },
+                        { label: 'Dropped', value: 'Dropped', color: '#fb7185' }
+                      ].map(opt => {
+                        const isActive = status === opt.value;
+                        return (
+                          <button
+                            key={opt.value}
+                            onClick={(e) => {
+                              e.stopPropagation(); 
+                              handleUpdateStatus(game._id, isActive ? '' : opt.value);
+                            }}
+                            style={{
+                              flex: '1 1 auto', 
+                              textAlign: 'center',
+                              background: isActive ? opt.color : 'transparent',
+                              color: isActive ? '#000' : opt.color,
+                              
+                              border: isActive ? `1px solid ${opt.color}` : `1px solid ${opt.color}40`,
+                              
+                              padding: '6px 8px',
+                              borderRadius: '6px',
+                              fontSize: '11px',
+                              fontWeight: '700',
+                              cursor: 'pointer',
+                              transition: 'all 0.2s ease',
+                              textTransform: 'uppercase',
+                              letterSpacing: '0.5px'
+                            }}
+                            title={isActive ? "Click to remove from library" : `Move to ${opt.label}`}
+                          >
+                            {opt.label}
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
 
-              </div>
-            ))}
+                </div>
+              );
+            })}
           </div>
         )}
       </main>

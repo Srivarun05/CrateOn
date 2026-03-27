@@ -121,7 +121,7 @@ const LibraryEditModal = ({ isOpen, onClose, statusRecord, onSaveSuccess }) => {
             <textarea 
               name="notes" 
               rows="3" 
-              placeholder="Jot down your thoughts, build ideas, or review here..."
+              placeholder="Write down your thoughts, build ideas, or review here..."
               value={formData.notes} 
               onChange={handleChange} 
             />
