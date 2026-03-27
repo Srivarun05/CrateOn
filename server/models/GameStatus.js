@@ -15,7 +15,26 @@ const gameStatusSchema = new mongoose.Schema({
         type: String,
         enum: ['Playing', 'Plan to Play', 'Completed', 'Paused', 'Dropped'],
         required: true
+    },
+    playTime: { 
+        type: Number, 
+        default: 0 
+    },
+    startDate: { 
+        type: Date 
+    },
+    endDate: { 
+        type: Date 
+    },
+    ngPlus: { 
+        type: Number, 
+        default: 0 
+    }, 
+    notes: { 
+        type: String, 
+        default: "" 
     }
+    
 }, { timestamps: true });
 
 gameStatusSchema.index({ user: 1, game: 1 }, { unique: true });
