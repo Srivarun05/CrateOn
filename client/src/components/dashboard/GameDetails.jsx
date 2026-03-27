@@ -56,10 +56,10 @@ const GameDetails = ({ isOpen, onClose, game }) => {
     }
   }, [isOpen, game]);
 
-  const handleStatusChange = async (e) => {
+  const handleStatusChange = async (selectedStatus) => {
     if (!user) return setShowGuestModal(true);
     
-    const newStatus = e.target.value;
+    const newStatus = currentStatus === selectedStatus ? '' : selectedStatus;    
     setCurrentStatus(newStatus);
     setIsStatusLoading(true);
     
@@ -154,28 +154,31 @@ const GameDetails = ({ isOpen, onClose, game }) => {
 
           <GameRating gameId={game._id || game.id} />
           
-          <div className="status-tracker" style={{ display: 'flex', gap: '12px', alignItems: 'center', marginBottom: '32px' }}>
-            <select 
-              value={currentStatus} 
-              onChange={handleStatusChange}
-              disabled={isStatusLoading}
-              style={{ 
-                background: '#111', color: '#fff', border: '1px solid #333', 
-                padding: '10px 16px', borderRadius: '8px', cursor: 'pointer', outline: 'none' 
-              }}
-            >
-              <option value="">+ Add to Library...</option>
-              <option value="Playing">▶ Playing</option>
-              <option value="Plan to Play">📅 Plan to Play</option>
-              <option value="Completed">★ Completed</option>
-              <option value="Paused">⏸ Paused</option>
-              <option value="Dropped">✖ Dropped</option>
-            </select>
-
+          <div className="status-buttons-container">
+            <p className="status-label">Library Status</p>
+            <div className="status-buttons-row">
+              {[
+                { label: 'Completed', value: 'Completed', colorClass: 'status-completed' },
+                { label: 'Planning', value: 'Plan to Play', colorClass: 'status-planning' },
+                { label: 'Playing', value: 'Playing', colorClass: 'status-playing' },
+                { label: 'Paused', value: 'Paused', colorClass: 'status-paused' },
+                { label: 'Dropped', value: 'Dropped', colorClass: 'status-dropped' }
+              ].map(option => (
+                <button
+                  key={option.value}
+                  onClick={() => handleStatusChange(option.value)}
+                  disabled={isStatusLoading}
+                  className={`status-pill ${option.colorClass} ${currentStatus === option.value ? 'active' : ''}`}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+            
             {currentStatus && (
               <button 
                 onClick={() => window.location.href = '/status'} 
-                style={{ background: 'transparent', color: '#3b82f6', border: 'none', cursor: 'pointer', fontSize: '14px', fontWeight: '600' }}
+                className="view-library-link"
               >
                 View in Library →
               </button>
