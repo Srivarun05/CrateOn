@@ -41,7 +41,7 @@ const TopNav = () => {
             
             {user?.role === 'admin' && (
               <a 
-                className={`main-nav-link admin-link ${location.pathname === '/admin' ? 'active' : ''}`} 
+                className={`main-nav-link ${location.pathname === '/admin' ? 'active' : ''}`} 
                 onClick={() => navigate('/admin')}
                 style={{ cursor: 'pointer' }}
               >

@@ -126,10 +126,11 @@ const MyStatus = () => {
                             style={{
                               flex: '1 1 auto', 
                               textAlign: 'center',
-                              background: isActive ? opt.color : 'transparent',
-                              color: isActive ? '#000' : opt.color,
                               
-                              border: isActive ? `1px solid ${opt.color}` : `1px solid ${opt.color}40`,
+                              /* Option 3 Logic: Colored when active, Dark/Neutral when inactive */
+                              background: isActive ? opt.color : 'transparent',
+                              color: isActive ? '#000' : '#666',
+                              border: `1px solid ${isActive ? opt.color : '#333'}`,
                               
                               padding: '6px 8px',
                               borderRadius: '6px',

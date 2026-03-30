@@ -40,6 +40,13 @@
     gap: 24px; 
 }
 
+/* --- NAV & BUTTON ANIMATIONS --- */
+.main-nav-link, 
+.sub-link, 
+.user-profile-btn { 
+    position: relative; 
+}
+
 .main-nav-link { 
     color: #a3a3a3; 
     font-size: 14px; 
@@ -56,9 +63,38 @@
 }
 
 .main-nav-link.admin-link { 
-    color: #ffffff; 
-    border-bottom: 2px solid #ffffff; 
+    color: #ffffff;
 }
+
+/* Shared Animated Underline */
+.main-nav-link::after, 
+.sub-link::after, 
+.user-profile-btn::after {
+    content: '';
+    position: absolute;
+    width: 0; 
+    height: 2px;
+    left: 50%;
+    transform: translateX(-50%); 
+    background-color: #ffffff;
+    transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    border-radius: 2px;
+}
+
+/* Specific Underline Positions */
+.main-nav-link::after { bottom: -6px; }
+.sub-link::after { bottom: -4px; }
+.user-profile-btn::after { bottom: -1px; }
+
+/* Trigger Underline Expansion */
+.main-nav-link:hover::after, 
+.main-nav-link.active::after,
+.sub-link:hover::after, 
+.sub-link.active::after,
+.user-profile-btn:hover::after {
+    width: 100%;
+}
+/* ------------------------------ */
 
 .header-right { 
     display: flex; 
@@ -149,6 +185,7 @@
     border-radius: 8px; 
     background-color: #111; 
 }
+
 .sub-nav-links { 
     display: flex; 
     gap: 20px;
@@ -203,7 +240,6 @@
   flex-direction: column;
   width: 100%;
 }
-
 
 .hero-banner { 
   position: relative; 
