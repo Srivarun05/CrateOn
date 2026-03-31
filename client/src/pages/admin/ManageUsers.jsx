@@ -21,7 +21,6 @@ const ManageUsers = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
   const [actionModal, setActionModal] = useState({ isOpen: false, type: '', selectedUser: null });
-  
   const [editModal, setEditModal] = useState({ isOpen: false, user: null, username: '', email: '' });
 
   const fetchUsers = async () => {
@@ -44,17 +43,27 @@ const ManageUsers = () => {
     u.email?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const checkPermission = (targetUser) => {
+    if (!currentUser || !targetUser) return false;
+    if (currentUser._id === targetUser._id) return false; 
+    if (currentUser.role === 'admin') {
+      return targetUser.role === 'user';
+    }
+    return false;
+  };
+
   const handleToggleRoleClick = (u) => {
-    if (u._id === currentUser._id) return; 
+    if (!checkPermission(u)) return;
     setActionModal({ isOpen: true, type: 'role', selectedUser: u });
   };
 
   const handleDeleteUserClick = (u) => {
-    if (u._id === currentUser._id) return; 
+    if (!checkPermission(u)) return;
     setActionModal({ isOpen: true, type: 'delete', selectedUser: u });
   };
 
   const handleEditUserClick = (u) => {
+    if (!checkPermission(u)) return;
     setEditModal({ 
       isOpen: true, 
       user: u, 
@@ -75,6 +84,7 @@ const ManageUsers = () => {
       fetchUsers(); 
     } catch (error) {
       console.error(`Failed to execute ${type}`, error);
+      alert(error.response?.data?.message || `Failed to execute ${type}`);
     } finally {
       setActionModal({ isOpen: false, type: '', selectedUser: null });
     }
@@ -139,59 +149,71 @@ const ManageUsers = () => {
               </thead>
               <tbody>
                 {filteredUsers.length > 0 ? (
-                  filteredUsers.map(u => (
-                    <tr key={u._id}>
-                      <td>
-                        <div className="user-cell">
-                          <div className="user-avatar">
-                            {u.profilePic ? (
-                              <img src={getImageUrl(u.profilePic)} alt="avatar" />
-                            ) : (
-                              <span style={{ color: '#fff', fontSize: '12px', fontWeight: 'bold' }}>
-                                {(u.username || 'U')[0].toUpperCase()}
-                              </span>
-                            )}
+                  filteredUsers.map(u => {
+                    const canEdit = checkPermission(u); 
+                    return (
+                      <tr key={u._id}>
+                        <td>
+                          <div className="user-cell">
+                            <div className="user-avatar">
+                              {u.profilePic ? (
+                                <img src={getImageUrl(u.profilePic)} alt="avatar" />
+                              ) : (
+                                <span style={{ color: '#fff', fontSize: '12px', fontWeight: 'bold' }}>
+                                  {(u.username || 'U')[0].toUpperCase()}
+                                </span>
+                              )}
+                            </div>
+                            <span className="user-name">
+                              {u.username} 
+                              {u._id === currentUser._id && <span style={{ color: '#666', fontSize: '12px', marginLeft: '8px' }}>(You)</span>}
+                            </span>
                           </div>
-                          <span className="user-name">{u.username}</span>
-                        </div>
-                      </td>
-                      <td className="text-muted">{u.email}</td>
-                      <td className="text-muted">
-                        {new Date(u.createdAt || Date.now()).toLocaleDateString()}
-                      </td>
-                      <td>
-                        <span 
-                          className={`role-badge ${u.role === 'admin' ? 'admin' : 'user'}`}
-                          style={{ cursor: u._id === currentUser._id ? 'default' : 'pointer', opacity: u._id === currentUser._id ? 0.5 : 1 }}
-                          onClick={() => handleToggleRoleClick(u)}
-                          title={u._id !== currentUser._id ? "Click to toggle role" : "Cannot change own role"}
-                        >
-                          {u.role === 'admin' ? <Shield size={12} /> : <User size={12} />}
-                          {u.role?.toUpperCase() || 'USER'}
-                        </span>
-                      </td>
-                      <td style={{ textAlign: 'right' }}>
-                        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
-                          <button 
-                            className="edit-user-btn" 
-                            onClick={() => handleEditUserClick(u)}
-                            title="Edit User Info"
+                        </td>
+                        <td className="text-muted">{u.email}</td>
+                        <td className="text-muted">
+                          {new Date(u.createdAt || Date.now()).toLocaleDateString()}
+                        </td>
+                        <td>
+                          <span 
+                            className={`role-badge ${u.role === 'admin' ? 'admin' : 'user'}`}
+                            style={{ 
+                              cursor: canEdit ? 'pointer' : 'default', 
+                              opacity: canEdit ? 1 : 0.5
+                            }}
+                            onClick={() => canEdit && handleToggleRoleClick(u)}
+                            title={canEdit ? "Click to toggle role" : "You do not have permission to change this role"}
                           >
-                            <Edit2 size={16} />
-                          </button>
-                          
-                          <button 
-                            className="delete-user-btn" 
-                            onClick={() => handleDeleteUserClick(u)}
-                            disabled={u._id === currentUser._id}
-                            title="Delete Account"
-                          >
-                            <Trash2 size={18} />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
+                            {u.role === 'admin' ? <Shield size={12} /> : <User size={12} />}
+                            {u.role?.toUpperCase() || 'USER'}
+                          </span>
+                        </td>
+                        <td style={{ textAlign: 'right' }}>
+                          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+                            <button 
+                              className="edit-user-btn" 
+                              onClick={() => handleEditUserClick(u)}
+                              disabled={!canEdit}
+                              title={canEdit ? "Edit User Info" : "No Permission"}
+                              style={{ opacity: canEdit ? 1 : 0.2 }}
+                            >
+                              <Edit2 size={16} />
+                            </button>
+                            
+                            <button 
+                              className="delete-user-btn" 
+                              onClick={() => handleDeleteUserClick(u)}
+                              disabled={!canEdit}
+                              title={canEdit ? "Delete Account" : "No Permission"}
+                              style={{ opacity: canEdit ? 1 : 0.2 }}
+                            >
+                              <Trash2 size={18} />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
                 ) : (
                   <tr>
                     <td colSpan="5" style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
@@ -208,13 +230,8 @@ const ManageUsers = () => {
       {actionModal.isOpen && (
         <div className="modal-overlay" style={{ zIndex: 2000 }} onClick={() => setActionModal({ isOpen: false, type: '', selectedUser: null })}>
           <div className="popup-modal-content" onClick={e => e.stopPropagation()}>
-            
             <div className={`modal-icon-wrapper ${actionModal.type === 'delete' ? 'warning' : ''}`} style={{ borderColor: actionModal.type === 'role' ? 'rgba(59, 130, 246, 0.5)' : ''}}>
-              {actionModal.type === 'delete' ? (
-                <Trash2 size={32} color="#ef4444" />
-              ) : (
-                <ShieldAlert size={32} color="#3b82f6" />
-              )}
+              {actionModal.type === 'delete' ? <Trash2 size={32} color="#ef4444" /> : <ShieldAlert size={32} color="#3b82f6" />}
             </div>
             
             <h2 style={{ color: '#fff', fontSize: '24px', marginBottom: '12px' }}>
@@ -236,10 +253,7 @@ const ManageUsers = () => {
               </button>
               <button 
                 onClick={executeAction}
-                style={{ 
-                  background: actionModal.type === 'delete' ? '#ef4444' : '#3b82f6', 
-                  color: '#fff', border: 'none', padding: '12px 24px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' 
-                }}
+                style={{ background: actionModal.type === 'delete' ? '#ef4444' : '#3b82f6', color: '#fff', border: 'none', padding: '12px 24px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}
               >
                 {actionModal.type === 'delete' ? 'Yes, Delete' : 'Confirm Change'}
               </button>
@@ -248,11 +262,11 @@ const ManageUsers = () => {
         </div>
       )}
 
+      {/* --- Edit Modal --- */}
       {editModal.isOpen && (
         <div className="modal-overlay" style={{ zIndex: 2000 }} onClick={() => setEditModal({ isOpen: false, user: null, username: '', email: '' })}>
           <div className="popup-modal-content" onClick={e => e.stopPropagation()} style={{ textAlign: 'left' }}>
             <h2 style={{ color: '#fff', fontSize: '24px', marginBottom: '24px' }}>Edit User Details</h2>
-            
             <form onSubmit={handleSaveEdit}>
               <div style={{ marginBottom: '16px' }}>
                 <label style={{ display: 'block', color: '#aaa', fontSize: '14px', marginBottom: '8px' }}>Username</label>
@@ -264,7 +278,6 @@ const ManageUsers = () => {
                   style={{ width: '100%', background: '#000', border: '1px solid #333', color: '#fff', padding: '12px', borderRadius: '8px', fontSize: '14px' }}
                 />
               </div>
-
               <div style={{ marginBottom: '32px' }}>
                 <label style={{ display: 'block', color: '#aaa', fontSize: '14px', marginBottom: '8px' }}>Email Address</label>
                 <input 
@@ -275,7 +288,6 @@ const ManageUsers = () => {
                   style={{ width: '100%', background: '#000', border: '1px solid #333', color: '#fff', padding: '12px', borderRadius: '8px', fontSize: '14px' }}
                 />
               </div>
-
               <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
                 <button 
                   type="button"
@@ -284,10 +296,7 @@ const ManageUsers = () => {
                 >
                   Cancel
                 </button>
-                <button 
-                  type="submit"
-                  style={{ background: '#3b82f6', color: '#fff', border: 'none', padding: '12px 24px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}
-                >
+                <button type="submit" style={{ background: '#3b82f6', color: '#fff', border: 'none', padding: '12px 24px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
                   Save Changes
                 </button>
               </div>

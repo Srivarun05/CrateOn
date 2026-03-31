@@ -25,6 +25,11 @@ export const deleteUser = async (req, res, next) => {
             throw new Error("You cannot delete your own admin account");
         }
 
+        if (req.user.role === 'admin' && user.role === 'admin') {
+            res.status(403);
+            throw new Error("Admins cannot delete other Admins");
+        }
+
         await User.findByIdAndDelete(req.params.id);
 
         res.status(200).json({ success: true, message: "User deleted successfully" });
@@ -96,6 +101,11 @@ export const updateUserByAdmin = async (req, res, next) => {
             throw new Error("User not found");
         }
 
+        if (req.user.role === 'admin' && user.role === 'admin') {
+            res.status(403);
+            throw new Error("Admins cannot edit the details of other Admins");
+        }
+
         user.username = req.body.username || user.username;
         user.email = req.body.email || user.email;
 
@@ -122,6 +132,11 @@ export const updateUserRole = async (req, res, next) => {
         if (user._id.toString() === req.user._id.toString()) {
             res.status(400);
             throw new Error("You cannot change your own role");
+        }
+
+        if (req.user.role === 'admin' && user.role === 'admin') {
+            res.status(403);
+            throw new Error("Admins cannot modify the roles of other Admins");
         }
 
         user.role = req.body.role || user.role;
