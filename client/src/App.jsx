@@ -3,11 +3,10 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 
-import './styles/auth.css';
+import './styles/auth.css';       
 import './styles/dashboard.css';
 import './styles/GameDetails.css';
 
-// --- 1. REPLACE PAGE IMPORTS WITH LAZY IMPORTS ---
 const Login = lazy(() => import('./pages/auth/Login'));
 const Register = lazy(() => import('./pages/auth/Register'));
 const Home = lazy(() => import('./pages/dashboard/Home'));
@@ -16,22 +15,54 @@ const MyStatus = lazy(() => import('./pages/dashboard/MyStatus'));
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
 const ManageUsers = lazy(() => import('./pages/admin/ManageUsers'));
 
-// --- 2. THE CUSTOM FALLBACK LOADER ---
 const PageLoader = () => (
   <div style={{ 
     height: '100vh', 
     display: 'flex', 
+    flexDirection: 'column',
     alignItems: 'center', 
     justifyContent: 'center', 
     backgroundColor: '#000',
-    color: '#fff' 
+    overflow: 'hidden' 
   }}>
-    <div className="spinner" style={{
-      width: '40px', height: '40px', border: '3px solid #333',
-      borderTop: '3px solid #fff', borderRadius: '50%',
-      animation: 'spin 1s linear infinite'
-    }} />
-    <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
+    <svg 
+      width="120px" 
+      height="120px" 
+      viewBox="0 0 100 100" 
+      className="crate-on-logo-structure"
+    >
+      <g fill="none" stroke="#ffffff" strokeWidth="4" strokeLinecap="square">
+        <path d="M10 20 H90 V90 H50 V60 H70 V75 H80 V30 H20 V90 H10 V20 Z" />
+        <path d="M35 50 V70 M35 70 H65 M35 50 H65 M65 50 L80 65" strokeWidth="3" />
+      </g>
+    </svg>
+
+    <p style={{
+        marginTop: '24px', 
+        color: '#fff', 
+        fontSize: '11px', 
+        fontWeight: '800', 
+        textTransform: 'uppercase', 
+        letterSpacing: '2px',
+        animation: 'textFade 1.6s infinite both'
+    }}>Loading Experience</p>
+
+    <style>{`
+      @keyframes structurePulse {
+        0% { opacity: 0.15; transform: scale(0.97); }
+        50% { opacity: 1; transform: scale(1); }
+        100% { opacity: 0.15; transform: scale(0.97); }
+      }
+      @keyframes textFade {
+        0% { opacity: 0.3; }
+        50% { opacity: 1; }
+        100% { opacity: 0.3; }
+      }
+      .crate-on-logo-structure {
+        animation: structurePulse 1.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        will-change: transform, opacity;
+      }
+    `}</style>
   </div>
 );
 
@@ -39,7 +70,6 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        {/* --- 3. WRAP ALL ROUTES IN SUSPENSE --- */}
         <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/" element={<Navigate to="/login" replace />} />
