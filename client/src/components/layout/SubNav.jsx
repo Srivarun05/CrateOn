@@ -13,7 +13,7 @@ const SubNav = ({ onOpenCreateModal, searchQuery, setSearchQuery, selectedGenre,
     <div className={`sub-header ${isAdmin ? 'admin-mode' : 'user-mode'}`} 
       style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '20px' }}>
       
-      <div className="user-nav-links" style={{ display: 'flex', gap: '16px' }}>        
+      <div className="user-nav-links desktop-only" style={{ display: 'flex', gap: '16px' }}>        
         {user && (
           <button 
             onClick={() => navigate('/wishlist')} 
@@ -23,29 +23,29 @@ const SubNav = ({ onOpenCreateModal, searchQuery, setSearchQuery, selectedGenre,
             <Heart size={16} fill={location.pathname === '/wishlist' ? '#fff' : 'none'} /> My Wishlist
           </button>
         )}
+
+        {user && (
+          <button 
+            className="admin-action-btn" 
+            onClick={() => navigate('/status')}
+            style={{ display: 'flex', alignItems: 'center', gap: '8px', background: location.pathname === '/status' ? '#333' : 'transparent', 
+              color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }} 
+          >
+            <Library size={16} fill={location.pathname === '/status' ? '#fff' : 'none'}/> My Library
+          </button>
+        )}
+
+        {isAdmin && (
+          <div className="admin-actions" style={{ display: 'flex', gap: '12px' }}>
+            <button className="admin-action-btn" onClick={onOpenCreateModal}>
+              <Plus size={16} /> Create Game
+            </button>
+            <button className="admin-action-btn" onClick={() => navigate('/admin/users')}>
+              <Users size={16} /> Manage Users
+            </button>
+          </div>
+      )}
       </div>
-
-      {user && (
-        <button 
-          className="admin-action-btn" 
-          onClick={() => navigate('/status')}
-          style={{ display: 'flex', alignItems: 'center', gap: '8px', background: location.pathname === '/status' ? '#333' : 'transparent', 
-            color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }} 
-        >
-          <Library size={16} fill={location.pathname === '/status' ? '#fff' : 'none'}/> My Library
-        </button>
-      )}
-
-      {isAdmin && (
-        <div className="admin-actions" style={{ display: 'flex', gap: '12px' }}>
-          <button className="admin-action-btn" onClick={onOpenCreateModal}>
-            <Plus size={16} /> Create Game
-          </button>
-          <button className="admin-action-btn" onClick={() => navigate('/admin/users')}>
-            <Users size={16} /> Manage Users
-          </button>
-        </div>
-      )}
 
       <div className="right-controls" style={{ display: 'flex', alignItems: 'center', gap: '12px', marginLeft: 'auto' }}>
         

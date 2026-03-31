@@ -358,3 +358,38 @@
   opacity: 0.3;
   cursor: not-allowed;
 }
+
+@media (max-width: 768px) {
+  .admin-stats-grid, .admin-actions-grid { grid-template-columns: 1fr; }
+  .admin-table-container { overflow-x: auto; } 
+  .popup-modal-content { width: 95%; padding: 24px; }
+
+  .admin-header h1 {
+    font-size: 28px;
+  }
+
+  .admin-stats-grid, .admin-actions-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .search-input-wrapper {
+    width: 100%;
+  }
+
+  .search-input.large {
+    width: 100%;
+  }
+
+  .admin-table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; 
+  }
+
+  .admin-table {
+    min-width: 600px; 
+  }
+
+  .popup-modal-content {
+    padding: 24px 20px;
+  }
+}

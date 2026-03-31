@@ -367,3 +367,57 @@ body {
     border-color: #4b5563; 
     background-color: #11131a; 
 }
+
+
+@media (max-width: 768px) {
+  .login-hero { 
+    display: none !important; 
+  } 
+  
+  .login-layout { 
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    width: 100%;
+  }
+
+  .auth-card { 
+    width: 100%;
+    max-width: 400px;
+    padding: 32px 24px; 
+    margin: 0 auto; 
+  }
+
+  .main-content { 
+    padding: 16px; 
+    align-items: center !important; 
+    justify-content: center !important;
+  }
+  
+  .main-content {
+    padding: 20px;
+    align-items: flex-start;
+  }
+
+  .login-layout {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .login-hero-image {
+    aspect-ratio: 21 / 9; 
+    margin-bottom: 16px;
+  }
+
+  .login-hero-text h1 {
+    font-size: 32px;
+  }
+
+  .auth-card {
+    padding: 32px 20px; 
+  }
+
+  .auth-title {
+    font-size: 28px;
+  }
+}

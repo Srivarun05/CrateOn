@@ -240,3 +240,28 @@
   color: #aaa;
   transform: translateY(-50%) scale(1.1); 
 }
+
+@media (max-width: 768px) {
+  .profile-modal-content {
+    padding: 24px 20px;
+    width: 95%;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .profile-header {
+    font-size: 20px;
+    margin-bottom: 24px;
+    text-align: center;
+  }
+
+  .profile-pic-preview {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .save-profile-btn {
+    padding: 12px;
+    font-size: 15px;
+  }
+}

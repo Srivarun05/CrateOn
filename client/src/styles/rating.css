@@ -78,3 +78,23 @@
   background: rgba(239, 68, 68, 0.1); 
   color: #ef4444; 
 }
+
+@media (max-width: 480px) {
+  .rating-container {
+    flex-direction: column; 
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .rating-stats {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .clear-rating-btn {
+    margin-left: auto; 
+  }
+}

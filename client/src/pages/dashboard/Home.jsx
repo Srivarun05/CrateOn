@@ -156,7 +156,7 @@ const Home = () => {
 
   return (
     <div className="steam-dashboard">
-      <TopNav />
+      <TopNav onOpenCreateModal={handleOpenCreate} />
       <SubNav 
         onOpenCreateModal={handleOpenCreate}
         searchQuery={searchQuery}
