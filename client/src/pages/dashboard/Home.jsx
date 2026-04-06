@@ -10,8 +10,9 @@ import GameCard from '../../components/dashboard/GameCard';
 import GameModal from '../../components/dashboard/GameModal';
 import GameDetails from '../../components/dashboard/GameDetails';
 import GuestModal from '../../components/common/GuestModal';
+import { getImageUrl } from '../../config';
 import '../../styles/dashboard.css';
-import '../../styles/Home.css';
+import '../../styles/home.css';
 import Footer from '../../components/layout/Footer';
 
 const Home = () => {

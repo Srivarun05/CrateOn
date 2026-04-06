@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Play } from 'lucide-react';
-
-const getImageUrl = (imagePath) => {
-  if (!imagePath) return '';
-  if (imagePath.startsWith('http')) return imagePath;
-  return `http://localhost:8000/${imagePath.replace(/\\/g, "/")}`; 
-};
+import { getImageUrl } from '../../config';
 
 const HeroBanner = ({ games, onViewDetails }) => {
   const [currentIndex, setCurrentIndex] = useState(0);

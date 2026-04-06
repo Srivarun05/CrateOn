@@ -1,12 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Edit2, Heart } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-
-const getImageUrl = (imagePath) => {
-  if (!imagePath) return '';
-  if (imagePath.startsWith('http')) return imagePath;
-  return `http://localhost:8000/${imagePath.replace(/\\/g, "/")}`; 
-};
+import { getImageUrl } from '../../config';
 
 const GameCard = ({ game, onEdit, onViewDetails, isFavorited, onToggleFavorite }) => {
   const { user } = useAuth();

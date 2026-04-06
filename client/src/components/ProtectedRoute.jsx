@@ -1,11 +1,6 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-
-// TODO: Replace this temporary mock with the real AuthContext hook before shipping route protection.
-const useAuth = () => ({
-  user: { username: 'AdminGamer', role: 'admin' }, 
-  isAuthenticated: true 
-});
+import { useAuth } from '../context/AuthContext';
 
 const ProtectedRoute = ({ allowedRoles }) => {
   const { user, isAuthenticated } = useAuth();

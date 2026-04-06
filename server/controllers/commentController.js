@@ -1,4 +1,4 @@
-import Comment from "../models/comment.js";
+import Comment from "../models/Comment.js";
 import Game from "../models/Game.js";
 
 export const addcomment = async (req, res, next) => {

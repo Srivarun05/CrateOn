@@ -4,13 +4,8 @@ import { useAuth } from '../../context/AuthContext';
 import Api from '../../Api';
 import GameRating from '../../pages/dashboard/GameRating';
 import GuestModal from '../common/GuestModal';
+import { getImageUrl } from '../../config';
 import '../../styles/GameDetails.css'; 
-
-const getImageUrl = (imagePath) => {
-  if (!imagePath) return '';
-  if (imagePath.startsWith('http')) return imagePath;
-  return `http://localhost:8000/${imagePath.replace(/\\/g, "/")}`; 
-};
 
 const GameDetails = ({ isOpen, onClose, game }) => {
   const { user } = useAuth();

@@ -1,12 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { X, UploadCloud, Trash2 } from 'lucide-react'; 
 import Api from '../../Api';
-
-const getImageUrl = (imagePath) => {
-  if (!imagePath) return '';
-  if (imagePath.startsWith('http')) return imagePath;
-  return `http://localhost:8000/${imagePath.replace(/\\/g, "/")}`; 
-};
+import { getImageUrl } from '../../config';
 
 const GameModal = ({ isOpen, onClose, gameToEdit, refreshGames }) => {
   const [name, setName] = useState('');

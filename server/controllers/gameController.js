@@ -1,7 +1,8 @@
 import Game from "../models/Game.js";
-import Comment from "../models/comment.js"; 
+import Comment from "../models/Comment.js"; 
 import Rating from "../models/Rating.js";
 import Favorite from "../models/Favorite.js";
+import GameStatus from "../models/GameStatus.js";
 import fs from "fs";
 
 
@@ -191,6 +192,7 @@ export const deleteGame = async (req, res) => {
         await Comment.deleteMany({ game: gameId });
         await Rating.deleteMany({ game: gameId });
         await Favorite.deleteMany({ game: gameId });
+        await GameStatus.deleteMany({ game: gameId });
 
         await Game.findByIdAndDelete(gameId);
 

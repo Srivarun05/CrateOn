@@ -1,13 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { X, Save } from 'lucide-react';
 import Api from '../../Api';
+import { getImageUrl } from '../../config';
 import '../../styles/librarymodal.css'; 
-
-const getImageUrl = (imagePath) => {
-  if (!imagePath) return '';
-  if (imagePath.startsWith('http')) return imagePath;
-  return `http://localhost:8000/${imagePath.replace(/\\/g, "/")}`; 
-};
 
 // Helper to format dates for the HTML <input type="date">
 const formatDateForInput = (dateString) => {

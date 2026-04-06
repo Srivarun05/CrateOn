@@ -77,12 +77,12 @@ function App() {
             <Route path="/" element={<Navigate to="/login" replace />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/wishlist" element={<Wishlist />} />
-            <Route path="/status" element={<MyStatus />} />
 
             <Route element={<ProtectedRoute />}>
               {/* Home is the main authenticated experience for regular users and admins. */}
               <Route path="/home" element={<Home />} />
+              <Route path="/wishlist" element={<Wishlist />} />
+              <Route path="/status" element={<MyStatus />} />
               {/* <Route path="/game/:id" element={<GameDetails />} /> */}
             </Route>
 

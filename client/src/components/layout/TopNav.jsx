@@ -3,12 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { PieChart, User as UserIcon, LogOut, Menu, X, Heart, Library, Shield, Plus, Users } from 'lucide-react';
 import UserProfileModal from '../dashboard/UserProfileModal'; 
-
-const getImageUrl = (imagePath) => {
-  if (!imagePath) return '';
-  if (imagePath.startsWith('http')) return imagePath;
-  return `http://localhost:8000/${imagePath.replace(/\\/g, "/")}`; 
-};
+import { getImageUrl } from '../../config';
 
 // The top bar is shared across user and admin pages; it also owns the profile modal entry point.
 const TopNav = ({ onOpenCreateModal }) => {

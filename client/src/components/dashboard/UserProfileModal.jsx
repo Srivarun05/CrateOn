@@ -2,13 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { X, Upload, User as UserIcon, Edit2 } from 'lucide-react';
 import Api from '../../Api';
 import { useAuth } from '../../context/AuthContext';
+import { getImageUrl } from '../../config';
 import '../../styles/profile.css';
-
-const getImageUrl = (imagePath) => {
-  if (!imagePath) return '';
-  if (imagePath.startsWith('http')) return imagePath;
-  return `http://localhost:8000/${imagePath.replace(/\\/g, "/")}`; 
-};
 
 const UserProfileModal = ({ isOpen, onClose }) => {
   const { user, login } = useAuth(); 

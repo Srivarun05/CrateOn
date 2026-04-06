@@ -1,15 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import Api from '../../Api';
 import TopNav from '../../components/layout/TopNav';
 import { Play, Calendar, CheckCircle, Pause, XCircle } from 'lucide-react';
+import { getImageUrl } from '../../config';
 import LibraryEditModal from '../../components/dashboard/LibraryEditModal'; 
-
-const getImageUrl = (imagePath) => {
-  if (!imagePath) return '';
-  if (imagePath.startsWith('http')) return imagePath;
-  return `http://localhost:8000/${imagePath.replace(/\\/g, "/")}`; 
-};
 
 const STATUS_CATEGORIES = [
   { id: 'Playing', icon: <Play size={18} />, color: '#a855f7' },
@@ -20,7 +14,6 @@ const STATUS_CATEGORIES = [
 ];
 
 const MyStatus = () => {
-  const navigate = useNavigate();
   const [statuses, setStatuses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('Playing');
@@ -32,7 +25,7 @@ const MyStatus = () => {
     try {
       // Each status record includes both the game and the user's tracking metadata for that game.
       const response = await Api.get('/status');
-      setStatuses(response.data.data);
+      setStatuses((response.data.data || []).filter(record => record.game));
     } catch (error) {
       console.error("Failed to load library");
     } finally {
@@ -95,6 +88,8 @@ const MyStatus = () => {
             {displayedGames.map((record) => {
               const { game, status } = record; 
               
+              if (!game) return null;
+
               return (
                 <div key={game._id} style={{ background: '#111', borderRadius: '12px', border: '1px solid #333', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
                   

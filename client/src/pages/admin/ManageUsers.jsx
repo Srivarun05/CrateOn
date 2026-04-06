@@ -4,13 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import Api from '../../Api';
 import TopNav from '../../components/layout/TopNav';
+import { getImageUrl } from '../../config';
 import '../../styles/admin.css';
-
-const getImageUrl = (imagePath) => {
-  if (!imagePath) return '';
-  if (imagePath.startsWith('http')) return imagePath;
-  return `http://localhost:8000/${imagePath.replace(/\\/g, "/")}`; 
-};
 
 const ManageUsers = () => {
   const navigate = useNavigate();
