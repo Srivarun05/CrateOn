@@ -37,7 +37,7 @@ Follow these instructions to get a local copy of the project up and running on y
 
 1. **Clone the repository**
    ```bash
-   git clone [https://github.com/](https://github.com/)[your-username]/CrateOn.git
+   git clone https://github.com/your-username/CrateOn.git
    cd CrateOn
 2. **Setup the Backend**
    ```bash
