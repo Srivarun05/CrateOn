@@ -127,7 +127,6 @@ const MyStatus = () => {
                               flex: '1 1 auto', 
                               textAlign: 'center',
                               
-                              /* Option 3 Logic: Colored when active, Dark/Neutral when inactive */
                               background: isActive ? opt.color : 'transparent',
                               color: isActive ? '#000' : '#666',
                               border: `1px solid ${isActive ? opt.color : '#333'}`,

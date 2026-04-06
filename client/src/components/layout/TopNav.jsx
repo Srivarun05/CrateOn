@@ -60,7 +60,6 @@ const TopNav = ({ onOpenCreateModal }) => {
         </div>
 
         <div className="header-right">
-          {/* Added 'desktop-only' to completely hide this button on phones */}
           <button 
             className="user-profile-btn desktop-only" 
             onClick={() => setIsProfileOpen(true)}
@@ -87,7 +86,6 @@ const TopNav = ({ onOpenCreateModal }) => {
         </div>
       </header>
 
-      {/* --- MOBILE SLIDE-OUT MENU --- */}
       {isMobileMenuOpen && (
         <div className="mobile-menu-overlay" onClick={() => setIsMobileMenuOpen(false)}></div>
       )}
@@ -101,7 +99,6 @@ const TopNav = ({ onOpenCreateModal }) => {
 
         <nav className="mobile-menu-links">
           
-          {/* 1. PROFILE IN MOBILE MENU */}
           <button 
             onClick={() => { setIsProfileOpen(true); setIsMobileMenuOpen(false); }} 
             style={{ borderBottom: '1px solid #222', marginBottom: '8px', paddingBottom: '20px' }}
@@ -126,7 +123,6 @@ const TopNav = ({ onOpenCreateModal }) => {
             <Library size={18} /> My Library
           </button>
 
-          {/* ADMIN ONLY CONTROLS */}
           {user?.role === 'admin' && (
             <>
               <div style={{ color: '#666', fontSize: '11px', fontWeight: 'bold', textTransform: 'uppercase', padding: '16px 16px 8px 16px', marginTop: '8px', borderTop: '1px solid #222', letterSpacing: '1px' }}>
@@ -137,14 +133,12 @@ const TopNav = ({ onOpenCreateModal }) => {
                 <Shield size={18} /> Admin Panel
               </button>
               
-              {/* 2. CREATE GAME IN MOBILE MENU */}
               {onOpenCreateModal && (
                 <button onClick={() => { onOpenCreateModal(); setIsMobileMenuOpen(false); }}>
                   <Plus size={18} /> Create Game
                 </button>
               )}
               
-              {/* 3. MANAGE USERS IN MOBILE MENU */}
               <button onClick={() => navigateAndClose('/admin/users')} className={location.pathname === '/admin/users' ? 'active' : ''}>
                 <Users size={18} /> Manage Users
               </button>

@@ -66,7 +66,6 @@ const LibraryEditModal = ({ isOpen, onClose, statusRecord, onSaveSuccess }) => {
     <div className="modal-overlay" onClick={onClose} style={{ zIndex: 3000 }}>
       <div className="tracker-modal-content" onClick={e => e.stopPropagation()}>
         
-        {/* --- HERO BANNER --- */}
         <div className="tracker-hero" style={{ backgroundImage: `url(${getImageUrl(game.image)})` }}>
           <div className="tracker-hero-overlay"></div>
           <button className="tracker-close-btn" onClick={onClose}><X size={20} /></button>

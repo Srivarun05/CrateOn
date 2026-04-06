@@ -262,7 +262,6 @@ const ManageUsers = () => {
         </div>
       )}
 
-      {/* --- Edit Modal --- */}
       {editModal.isOpen && (
         <div className="modal-overlay" style={{ zIndex: 2000 }} onClick={() => setEditModal({ isOpen: false, user: null, username: '', email: '' })}>
           <div className="popup-modal-content" onClick={e => e.stopPropagation()} style={{ textAlign: 'left' }}>

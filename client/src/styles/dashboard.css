@@ -40,7 +40,6 @@
     gap: 24px; 
 }
 
-/* --- NAV & BUTTON ANIMATIONS --- */
 .main-nav-link, 
 .sub-link, 
 .user-profile-btn { 
@@ -66,7 +65,6 @@
     color: #ffffff;
 }
 
-/* Shared Animated Underline */
 .main-nav-link::after, 
 .sub-link::after, 
 .user-profile-btn::after {
@@ -81,12 +79,10 @@
     border-radius: 2px;
 }
 
-/* Specific Underline Positions */
 .main-nav-link::after { bottom: -6px; }
 .sub-link::after { bottom: -4px; }
 .user-profile-btn::after { bottom: -1px; }
 
-/* Trigger Underline Expansion */
 .main-nav-link:hover::after, 
 .main-nav-link.active::after,
 .sub-link:hover::after, 
@@ -94,7 +90,6 @@
 .user-profile-btn:hover::after {
     width: 100%;
 }
-/* ------------------------------ */
 
 .header-right { 
     display: flex; 
@@ -1061,7 +1056,6 @@
   .desktop-only { display: none !important; }
   .mobile-only { display: block !important; }
 
-  /* Keep Logo on Left, Profile/Hamburger on Right */
   .global-header {
     flex-direction: row !important;
     justify-content: space-between !important;
@@ -1074,11 +1068,10 @@
     gap: 12px !important;
   }
 
-  /* Slide-Out Menu Styling */
   .mobile-slide-menu {
     position: fixed;
     top: 0;
-    right: -280px; /* Hidden off-screen by default */
+    right: -280px;
     width: 280px;
     height: 100vh;
     background: #0a0a0a;
@@ -1091,7 +1084,7 @@
   }
 
   .mobile-slide-menu.open {
-    right: 0; /* Slides in! */
+    right: 0;
   }
 
   .mobile-menu-overlay {
