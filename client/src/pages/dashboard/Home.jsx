@@ -12,6 +12,7 @@ import GameDetails from '../../components/dashboard/GameDetails';
 import GuestModal from '../../components/common/GuestModal';
 import '../../styles/dashboard.css';
 import '../../styles/Home.css';
+import Footer from '../../components/layout/Footer';
 
 const Home = () => {
   const { user } = useAuth();
@@ -279,6 +280,8 @@ const Home = () => {
         onClose={() => setShowGuestModal(false)} 
         actionText="add games to your wishlist" 
       />
+
+      <Footer />
 
     </div>
   );
