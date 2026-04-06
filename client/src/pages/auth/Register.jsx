@@ -19,6 +19,7 @@ const Register = () => {
     setLoading(true);
 
     try {
+        // Registration only creates the account; the user is then routed to login explicitly.
         const response = await Api.post('/auth/register', {
         username,
         email,
@@ -53,6 +54,7 @@ const Register = () => {
               Already part of the quest? <span className="auth-link" onClick={() => navigate('/login')}>Log In</span>
             </p>
 
+            {/* The same error slot handles duplicate email, weak password, and network failures. */}
             {error && <div className="error-msg">{error}</div>}
 
             <form onSubmit={handleRegister}>

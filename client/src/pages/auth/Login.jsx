@@ -22,6 +22,7 @@ const Login = () => {
     setLoading(true);
 
     try {
+      // The backend returns user data plus token; AuthContext stores both for the rest of the app.
       const response = await Api.post('/auth/login', {
         email,
         password
@@ -64,6 +65,7 @@ const Login = () => {
             <h2 className="auth-title">Welcome back</h2>
             <p className="auth-subtitle">Please enter your details to sign in.</p>
 
+            {/* API validation or credential errors are surfaced inline instead of using alerts. */}
             {error && <div className="error-msg">{error}</div>}
 
             <form onSubmit={handleLogin}>

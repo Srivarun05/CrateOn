@@ -33,6 +33,7 @@ const GameCard = ({ game, onEdit, onViewDetails, isFavorited, onToggleFavorite }
     const shadowX = ((x - centerX) / centerX) * -20;
     const shadowY = ((y - centerY) / centerY) * -20;
 
+    // A lightweight tilt effect gives cards some depth without introducing a separate animation library.
     setTiltStyle({
       transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.03, 1.03, 1.03)`,
       boxShadow: `${shadowX}px ${shadowY + 20}px 40px rgba(0, 0, 0, 0.9), 0 0 20px rgba(255, 255, 255, 0.15)`,
@@ -64,6 +65,7 @@ const GameCard = ({ game, onEdit, onViewDetails, isFavorited, onToggleFavorite }
         className={`favorite-btn ${isFavorited ? 'favorited' : ''}`}
         title={isFavorited ? "Remove from Wishlist" : "Add to Wishlist"}
         onClick={(e) => { 
+          // Stop propagation so toggling wishlist status does not also open the details modal.
           e.stopPropagation();  
           onToggleFavorite(game._id); 
         }} 

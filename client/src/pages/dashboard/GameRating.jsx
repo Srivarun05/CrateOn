@@ -18,6 +18,7 @@ const GameRating = ({ gameId }) => {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
+    // Ratings refresh when the viewed game changes and when auth changes in case the user's own vote changed.
     if (gameId) fetchRatings();
   }, [gameId, user]);
 
@@ -36,12 +37,14 @@ const GameRating = ({ gameId }) => {
 
   const handleRatingSubmit = async (selectedRating) => {
     if (!user) {
+      // Guests can see community sentiment but must log in before creating their own rating.
       setShowGuestModal(true);
       return;
     }
 
     setAnimatingStar(selectedRating);
     setRating(selectedRating);
+    // Local animation makes the control feel immediate even before the round trip completes.
     setTimeout(() => setAnimatingStar(null), 300); 
 
     try {

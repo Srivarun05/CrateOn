@@ -23,6 +23,7 @@ const UserProfileModal = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     if (isOpen) {
+      // The modal refetches live profile data so it reflects updates from other tabs or admin changes.
       fetchUserProfile();
     }
   }, [isOpen]);
@@ -44,6 +45,7 @@ const UserProfileModal = ({ isOpen, onClose }) => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      // A local object URL gives instant feedback before the file is uploaded to the server.
       setProfilePic(file);
       setPreviewImage(URL.createObjectURL(file));
     }
@@ -67,6 +69,7 @@ const UserProfileModal = ({ isOpen, onClose }) => {
       
       setMessage({ type: 'success', text: 'Profile updated successfully!' });
       
+      // The page is reloaded here so every place that reads the avatar/name picks up the latest data.
       setTimeout(() => {
         window.location.reload(); 
       }, 1000);

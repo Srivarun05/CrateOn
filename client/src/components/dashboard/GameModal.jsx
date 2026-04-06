@@ -26,6 +26,7 @@ const GameModal = ({ isOpen, onClose, gameToEdit, refreshGames }) => {
   useEffect(() => {
     const fetchGenres = async () => {
       try {
+        // Genres are loaded from the backend so checkbox options stay aligned with server-side validation.
         const response = await Api.get(`/game/genres?t=${new Date().getTime()}`); 
         setAvailableGenres(response.data.data || []);
       } catch (error) {
@@ -37,6 +38,7 @@ const GameModal = ({ isOpen, onClose, gameToEdit, refreshGames }) => {
 
   useEffect(() => {
     if (gameToEdit) {
+      // Edit mode hydrates the form from an existing record; create mode starts from a clean slate.
       setName(gameToEdit.name || '');
       setDescription(gameToEdit.description || '');
       setIsFeatured(gameToEdit.isFeatured === true || gameToEdit.isFeatured === 'true');
@@ -65,6 +67,7 @@ const GameModal = ({ isOpen, onClose, gameToEdit, refreshGames }) => {
   if (!isOpen) return null;
 
   const handleGenreToggle = (genreName) => {
+    // Genres behave like a multi-select, but are stored locally as a plain array for easy form submission.
     if (genres.includes(genreName)) {
       setGenres(genres.filter(g => g !== genreName)); 
     } else {
@@ -108,12 +111,14 @@ const GameModal = ({ isOpen, onClose, gameToEdit, refreshGames }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // Create requires a cover image; edit can keep the existing one unless a replacement is chosen.
     if (genres.length === 0) return alert("Please select at least one genre.");
     if (!imagePreview && !imageFile && !gameToEdit) return alert("Please upload an image.");
     
     setLoading(true);
 
     const formData = new FormData();
+    // Multipart form data lets the same payload carry both text fields and an optional uploaded image.
     formData.append('name', name);
     formData.append('description', description);
     formData.append('genre', genres.join(', '));

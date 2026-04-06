@@ -10,7 +10,7 @@ const getImageUrl = (imagePath) => {
   return `http://localhost:8000/${imagePath.replace(/\\/g, "/")}`; 
 };
 
-// NOTE: Added onOpenCreateModal as a prop here so the mobile menu can trigger it!
+// The top bar is shared across user and admin pages; it also owns the profile modal entry point.
 const TopNav = ({ onOpenCreateModal }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -26,6 +26,7 @@ const TopNav = ({ onOpenCreateModal }) => {
 
   const navigateAndClose = (path) => {
     navigate(path);
+    // Mobile navigation always closes after a route change so the new page is visible immediately.
     setIsMobileMenuOpen(false); 
   };
 
@@ -89,6 +90,7 @@ const TopNav = ({ onOpenCreateModal }) => {
       {isMobileMenuOpen && (
         <div className="mobile-menu-overlay" onClick={() => setIsMobileMenuOpen(false)}></div>
       )}
+      {/* Desktop keeps links inline; mobile switches to an overlay drawer to save horizontal space. */}
       <div className={`mobile-slide-menu ${isMobileMenuOpen ? 'open' : ''}`}>
         <div className="mobile-menu-header">
           <h3>Menu</h3>

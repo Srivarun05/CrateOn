@@ -34,6 +34,7 @@ const GameDetails = ({ isOpen, onClose, game }) => {
     if (isOpen && game && user) {
       const fetchCurrentStatus = async () => {
         try {
+          // Status is fetched per-user so the same game can render differently for different players.
           const response = await Api.get('/status');
           const existingStatus = response.data.data.find(s => s.game._id === game._id);
           setCurrentStatus(existingStatus ? existingStatus.status : '');
@@ -49,6 +50,7 @@ const GameDetails = ({ isOpen, onClose, game }) => {
     if (isOpen && game) {
       fetchComments();
     } else {
+      // Reset modal-scoped state when closing so stale edits do not bleed into the next game.
       setComments([]); 
       setNewComment('');
       setEditingCommentId(null);
@@ -59,6 +61,7 @@ const GameDetails = ({ isOpen, onClose, game }) => {
   const handleStatusChange = async (selectedStatus) => {
     if (!user) return setShowGuestModal(true);
     
+    // Clicking the active status again clears it, which acts like removing the game from that bucket.
     const newStatus = currentStatus === selectedStatus ? '' : selectedStatus;    
     setCurrentStatus(newStatus);
     setIsStatusLoading(true);
@@ -207,6 +210,7 @@ const GameDetails = ({ isOpen, onClose, game }) => {
                   const currentUserId = user?._id || user?.id;
                   const commentUserId = commentObj.user?._id || commentObj.user?.id;
                   
+                  // Owners can manage their own comments; admins can moderate everyone else's.
                   const isOwner = Boolean(currentUserId && commentUserId && String(currentUserId) === String(commentUserId));
                   
                   const canEdit = isOwner || isAdmin;

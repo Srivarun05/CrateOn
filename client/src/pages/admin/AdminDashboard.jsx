@@ -15,6 +15,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchPlatformStats = async () => {
       try {
+        // Stats are built from the same APIs the rest of the app uses, avoiding a separate admin-only endpoint.
         const [gamesRes, usersRes] = await Promise.all([
           Api.get('/games'),
           Api.get('/users') 
@@ -36,6 +37,7 @@ const AdminDashboard = () => {
       }
     };
 
+    // Dashboard numbers are only needed on first mount for this view.
     fetchPlatformStats();
   }, []);
 
@@ -106,6 +108,7 @@ const AdminDashboard = () => {
           isOpen={isCreateModalOpen} 
           onClose={() => setIsCreateModalOpen(false)} 
           gameToEdit={null}
+          // The quick-action flow reuses the shared game modal in pure "create" mode.
           refreshGames={() => window.location.reload()} 
         />
       )}

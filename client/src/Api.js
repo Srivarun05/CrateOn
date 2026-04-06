@@ -7,6 +7,7 @@ const Api = axios.create({
   },
 });
 
+// Every request automatically picks up the persisted token, so components only worry about data calls.
 Api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');

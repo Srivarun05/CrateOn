@@ -36,6 +36,7 @@ const Home = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedGenre, setSelectedGenre] = useState('All');
 
+  // Genre options are derived from whatever the API returns, so admins do not maintain this list twice.
   const allGenres = ['All', ...new Set(games.flatMap(game => {
     if (!game.genre) return [];
     return Array.isArray(game.genre) ? game.genre : [game.genre];
@@ -57,6 +58,7 @@ const Home = () => {
   });
 
   useEffect(() => {
+    // Reset pagination whenever filters change so users always land on the first relevant result page.
     setCurrentPage(1);
   }, [searchQuery, selectedGenre]);
 
@@ -66,6 +68,7 @@ const Home = () => {
   let totalPages = 1;
 
   if (filteredGames.length > 0) {
+    // Page 1 intentionally highlights fewer cards because the hero banner occupies the top of the layout.
     if (currentPage === 1) {
       indexOfFirstGame = 0;
       indexOfLastGame = 6;
@@ -85,12 +88,14 @@ const Home = () => {
 
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
+    // Smoothly bring the grid back into view after page changes on longer screens.
     setTimeout(() => {
       gridTopRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, 100);
   };
 
   const featuredGames = games.filter(game => game.isFeatured === true || String(game.isFeatured) === 'true');
+  // When nothing is flagged as featured yet, we still keep the banner populated with the first few results.
   const bannerGamesToDisplay = featuredGames.length > 0 ? featuredGames : games.slice(0, 3);
 
   const fetchGames = async () => {
@@ -106,6 +111,7 @@ const Home = () => {
 
   const fetchFavorites = async () => {
     if (!user) {
+      // Guests can browse the catalog, but their wishlist stays empty until they sign in.
       setFavoriteIds([]); 
       return; 
     }
@@ -119,12 +125,14 @@ const Home = () => {
   };
 
   useEffect(() => {
+    // Favorites are refetched when auth changes because wishlist data is user-specific.
     fetchGames();
     fetchFavorites();
   }, [user]);
 
   const handleToggleFavorite = async (gameId) => {
     if (!user) {
+      // Reuse the guest modal instead of forcing an abrupt redirect away from the page.
       setShowGuestModal(true);
       return; 
     }
@@ -141,6 +149,7 @@ const Home = () => {
   };
 
   const handleOpenCreate = () => {
+    // Clearing editingGame tells the modal to behave like a create flow instead of edit flow.
     setEditingGame(null); 
     setIsModalOpen(true);
   };

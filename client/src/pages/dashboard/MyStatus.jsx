@@ -30,6 +30,7 @@ const MyStatus = () => {
 
   const fetchLibrary = async () => {
     try {
+      // Each status record includes both the game and the user's tracking metadata for that game.
       const response = await Api.get('/status');
       setStatuses(response.data.data);
     } catch (error) {
@@ -46,6 +47,7 @@ const MyStatus = () => {
   const handleUpdateStatus = async (gameId, newStatus) => {
     try {
       await Api.put(`/status/${gameId}`, { status: newStatus });
+      // Refetch keeps the tab counts and the card list aligned with the server after edits.
       fetchLibrary(); 
     } catch (error) {
       console.error("Failed to update status");
@@ -53,6 +55,7 @@ const MyStatus = () => {
   };
 
   const displayedGames = statuses.filter(s => s.status === activeTab);
+  // Tabs are rendered from the same source of truth used for filtering so counts never drift.
 
   return (
     <div className="steam-dashboard">

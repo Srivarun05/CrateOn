@@ -5,6 +5,7 @@ import '../../styles/footer.css';
 const Footer = () => {
   const currentYear = new Date().getFullYear();
   const scrollToTop = () => {
+    // Footer branding doubles as a lightweight "back to top" affordance on long pages.
     window.scrollTo({
       top: 0,
       behavior: 'smooth'

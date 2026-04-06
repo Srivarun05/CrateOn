@@ -11,6 +11,7 @@ const HeroBanner = ({ games, onViewDetails }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
+    // The hero rotates only when there is more than one featured game to cycle through.
     if (!games || games.length <= 1) return;
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % games.length);
@@ -44,6 +45,7 @@ const HeroBanner = ({ games, onViewDetails }) => {
         const imgUrl = getImageUrl(game.image || game.imageUrl);
 
         return (
+          // All slides stay mounted so the fade animation can crossfade smoothly between them.
           <div 
             key={game._id || index} 
             style={{

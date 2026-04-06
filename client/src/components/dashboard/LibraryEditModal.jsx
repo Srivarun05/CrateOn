@@ -28,6 +28,7 @@ const LibraryEditModal = ({ isOpen, onClose, statusRecord, onSaveSuccess }) => {
 
   useEffect(() => {
     if (isOpen && statusRecord) {
+      // The modal mirrors the selected library record so edits feel like an in-place detail view.
       setFormData({
         status: statusRecord.status || 'Playing',
         playTime: statusRecord.playTime || 0,
@@ -48,6 +49,7 @@ const LibraryEditModal = ({ isOpen, onClose, statusRecord, onSaveSuccess }) => {
     e.preventDefault();
     setIsSaving(true);
     try {
+      // Saving writes back to the same status endpoint used by the quick status pills elsewhere.
       await Api.put(`/status/${statusRecord.game._id}`, formData);
       onSaveSuccess(); 
       onClose(); 

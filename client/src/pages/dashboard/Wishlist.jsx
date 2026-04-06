@@ -20,6 +20,7 @@ const Wishlist = () => {
 
   useEffect(() => {
     if (!user) {
+      // Wishlist is a personal page, so guests are pushed back before any request is made.
       navigate('/'); 
       return;
     }
@@ -30,6 +31,7 @@ const Wishlist = () => {
     try {
       const response = await Api.get('/favorites');
       
+      // The favorites API returns wrapper objects; this page only needs the embedded game documents.
       const games = response.data.data.map(fav => fav.game);
       setWishlistGames(games.filter(g => g !== null)); 
     } catch (error) {
@@ -42,6 +44,7 @@ const Wishlist = () => {
   const handleToggleFavorite = async (gameId) => {
     try {
       await Api.post(`/favorites/${gameId}`);
+      // Optimistically remove the card from the current view after a successful toggle.
       setWishlistGames(wishlistGames.filter(game => game._id !== gameId));
     } catch (error) {
       console.error("Failed to remove from wishlist", error);

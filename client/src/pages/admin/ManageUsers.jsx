@@ -43,6 +43,7 @@ const ManageUsers = () => {
     u.email?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  // Admins can manage regular users, but not themselves or other admins from this screen.
   const checkPermission = (targetUser) => {
     if (!currentUser || !targetUser) return false;
     if (currentUser._id === targetUser._id) return false; 
@@ -75,6 +76,7 @@ const ManageUsers = () => {
   const executeAction = async () => {
     const { type, selectedUser } = actionModal;
     try {
+      // One confirmation modal handles both destructive delete and role-change flows.
       if (type === 'role') {
         const newRole = selectedUser.role === 'admin' ? 'user' : 'admin';
         await Api.put(`/users/${selectedUser._id}/role`, { role: newRole });
@@ -93,6 +95,7 @@ const ManageUsers = () => {
   const handleSaveEdit = async (e) => {
     e.preventDefault();
     try {
+      // This edit flow is intentionally limited to profile basics, not role or password changes.
       await Api.put(`/users/${editModal.user._id}`, { 
         username: editModal.username, 
         email: editModal.email 

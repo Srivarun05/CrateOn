@@ -8,6 +8,7 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Centralized logout keeps React state and localStorage in sync everywhere in the app.
   const logout = useCallback(() => {
     setUser(null);
     setToken(null);
@@ -16,6 +17,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
+    // A global 401 handler prevents every page from needing to duplicate session-expired logic.
     const interceptor = Api.interceptors.response.use(
       (response) => response, 
       (error) => {
@@ -34,6 +36,7 @@ export const AuthProvider = ({ children }) => {
 
   const refreshUserProfile = useCallback(async (authToken) => {
     try {
+      // The latest profile is fetched from the database so local edits stay fresh after login.
       if (Api.defaults.headers) {
           Api.defaults.headers.common['Authorization'] = `Bearer ${authToken}`;
       }
@@ -54,6 +57,7 @@ export const AuthProvider = ({ children }) => {
     
     if (storedUser && storedToken) {
       try {
+        // We decode the JWT locally to avoid booting the app with an obviously expired session.
         const payload = JSON.parse(atob(storedToken.split('.')[1]));
         const isExpired = payload.exp * 1000 < Date.now();
         
@@ -79,6 +83,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('user', JSON.stringify(userData));
 
     if (authToken) {
+      // Persisting the token here allows refreshes and new tabs to restore the session.
       setToken(authToken);
       localStorage.setItem('token', authToken);
       refreshUserProfile(authToken);

@@ -13,6 +13,7 @@ const SubNav = ({ onOpenCreateModal, searchQuery, setSearchQuery, selectedGenre,
     <div className={`sub-header ${isAdmin ? 'admin-mode' : 'user-mode'}`} 
       style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '20px' }}>
       
+      {/* Left-side actions change depending on whether the signed-in user is a player or an admin. */}
       <div className="user-nav-links desktop-only" style={{ display: 'flex', gap: '16px' }}>        
         {user && (
           <button 
@@ -49,6 +50,7 @@ const SubNav = ({ onOpenCreateModal, searchQuery, setSearchQuery, selectedGenre,
 
       <div className="right-controls" style={{ display: 'flex', alignItems: 'center', gap: '12px', marginLeft: 'auto' }}>
         
+        {/* The same control strip can optionally host genre filters when the parent page provides them. */}
         {selectedGenre && selectedGenre !== 'All' && (
           <button className="clear-filter-btn" onClick={() => setSelectedGenre && setSelectedGenre('All')}>
             {selectedGenre.toUpperCase()} <X size={14} strokeWidth={3} />

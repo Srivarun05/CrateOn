@@ -6,6 +6,7 @@ const ConfirmModal = ({ isOpen, onClose, onConfirm, title, message }) => {
   if (!isOpen) return null;
 
   return (
+    // Shared confirm dialog for destructive actions that need a second explicit user decision.
     <div className="modal-overlay" onClick={onClose} style={{ zIndex: 9999 }}>
       <div className="popup-modal-content" onClick={e => e.stopPropagation()}>
         

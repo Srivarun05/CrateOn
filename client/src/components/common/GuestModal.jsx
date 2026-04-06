@@ -8,6 +8,7 @@ const GuestModal = ({ isOpen, onClose, actionText }) => {
   if (!isOpen) return null;
 
   return (
+    // This reusable gate keeps guests in context while nudging them toward authentication.
     <div className="modal-overlay" onClick={onClose} style={{ zIndex: 9999 }}>
       <div className="popup-modal-content" onClick={e => e.stopPropagation()}>
         

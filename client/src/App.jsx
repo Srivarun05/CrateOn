@@ -15,6 +15,7 @@ const MyStatus = lazy(() => import('./pages/dashboard/MyStatus'));
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
 const ManageUsers = lazy(() => import('./pages/admin/ManageUsers'));
 
+// Shared suspense fallback so route-level lazy loading still feels intentional.
 const PageLoader = () => (
   <div style={{ 
     height: '100vh', 
@@ -68,6 +69,7 @@ const PageLoader = () => (
 
 function App() {
   return (
+    // AuthProvider wraps the entire router so every page can react to login/logout changes.
     <AuthProvider>
       <BrowserRouter>
         <Suspense fallback={<PageLoader />}>
@@ -79,11 +81,13 @@ function App() {
             <Route path="/status" element={<MyStatus />} />
 
             <Route element={<ProtectedRoute />}>
+              {/* Home is the main authenticated experience for regular users and admins. */}
               <Route path="/home" element={<Home />} />
               {/* <Route path="/game/:id" element={<GameDetails />} /> */}
             </Route>
 
             <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
+              {/* Admin routes are grouped under a stricter role gate. */}
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/admin/users" element={<ManageUsers />} />
             </Route> 
